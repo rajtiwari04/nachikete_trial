@@ -52,7 +52,7 @@ export default function HeroSection() {
             <span className="flex items-center gap-1 text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
               <Sparkles size={10} className="animate-pulse-soft" /> New
             </span>
-            <span className="text-sm text-text-secondary">TechFest 2025 registrations are open</span>
+            <span className="text-sm text-text-secondary">TechFest 2026 registrations are open</span>
             <ArrowRight size={13} className="text-text-muted group-hover:text-indigo-500 group-hover:translate-x-0.5 transition-all duration-200" />
           </Link>
         </motion.div>
