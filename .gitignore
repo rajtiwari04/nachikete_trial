@@ -1,2 +1,59 @@
 node_modules
 .env
+
+class book{
+   String title, author;
+   int pages;
+   book(String t,String a, int p){
+       title = t;
+       author = a;
+       pages = p;
+
+   }
+   book(){
+   this("unknown","notexist",0)
+   }
+   book(String t ){
+   this(t,"unknown",0)
+   }
+
+}
+class mobile{
+      String brand;
+      String model;
+      int price;
+      int ram ;
+      mobile(){
+      this("b","m",0,0);
+      }
+      mobile(String b,String m,int p ,int r ){
+          brand = b;
+          model = m ;
+          price = p;
+          ram = r;
+      }
+      mobile(String b.String m){
+      this(b,m,0,0);
+      }
+      mobile(int p,int r){
+      this("b","m",p,r);
+      }
+
+}
+class backaccount{
+String name;
+     int balance;
+     backaccount(){
+            this("unknown",0)
+     }
+     backaccount(String n,int b ){
+         name = n;
+         balance = b;
+         }
+     backaccount(String n){
+            this(n,0)
+     }
+     backaccount(int b){
+            this("unknown",b)
+     }
+}
