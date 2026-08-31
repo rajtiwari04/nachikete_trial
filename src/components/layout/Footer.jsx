@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Github, Instagram, Linkedin, Twitter, Mail, MapPin, Phone, ArrowUpRight, Heart } from 'lucide-react';
+import Logo from '@/components/ui/Logo';
 
 const FOOTER_LINKS = {
   Society: [
@@ -49,12 +50,7 @@ export default function Footer() {
 
           {/* Brand column */}
           <div className="lg:col-span-1">
-            <Link to="/" className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-lavender-500 flex items-center justify-center shadow-soft-sm">
-                <span className="text-white font-bold text-base">N</span>
-              </div>
-              <span className="font-bold text-xl tracking-tight text-text-primary">Nach<span className="text-indigo-500">iketa</span></span>
-            </Link>
+            <Logo to="/" size="md" className="mb-4" imgClassName="shadow-soft-sm" />
             <p className="text-sm text-text-secondary leading-relaxed mb-5 max-w-xs">
               Where curiosity meets excellence. A premier college society dedicated to innovation, creativity, and technical growth.
             </p>

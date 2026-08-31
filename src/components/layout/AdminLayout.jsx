@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import useAuthStore from '@/store/authStore';
 import toast from 'react-hot-toast';
+import Logo from '@/components/ui/Logo';
 
 const ADMIN_NAV = [
   { label: 'Dashboard',    href: '/admin/dashboard',    icon: LayoutDashboard },
@@ -37,16 +38,8 @@ export default function AdminLayout() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="flex items-center gap-3 p-5 border-b border-border">
-        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-lavender-500 flex items-center justify-center flex-shrink-0">
-          <span className="text-white font-bold text-sm">N</span>
-        </div>
-        {sidebarOpen && (
-          <div>
-            <span className="font-bold text-base text-text-primary">Nachiketa</span>
-            <p className="text-2xs text-text-muted">Admin Panel</p>
-          </div>
-        )}
+      <div className="flex items-center p-5 border-b border-border">
+        <Logo size="sm" showText={sidebarOpen} coloredText={false} subtext="Admin Panel" textClassName="text-base" />
       </div>
 
       {/* Nav */}

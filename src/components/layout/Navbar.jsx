@@ -5,6 +5,8 @@ import { Menu, X, ChevronDown, User, LogOut, LayoutDashboard, Shield } from 'luc
 import useAuthStore from '@/store/authStore';
 import toast from 'react-hot-toast';
 
+import Logo from '@/components/ui/Logo';
+
 const NAV_LINKS = [
   { label: 'About',        href: '/about' },
   { label: 'Events',       href: '/events' },
@@ -76,14 +78,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
 
             {/* ─── Logo ─────────────────────────────────────────────────────── */}
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-lavender-500 flex items-center justify-center shadow-soft-sm group-hover:shadow-glow-indigo transition-all duration-300">
-                <span className="text-white font-bold text-sm">N</span>
-              </div>
-              <span className="font-bold text-lg tracking-tight text-text-primary">
-                Nach<span className="text-indigo-500">iketa</span>
-              </span>
-            </Link>
+            <Logo to="/" size="sm" className="group" imgClassName="shadow-soft-sm group-hover:scale-105 transition-all duration-300" />
 
             {/* ─── Desktop Nav ──────────────────────────────────────────────── */}
             <div ref={dropRef} className="hidden md:flex items-center gap-1">

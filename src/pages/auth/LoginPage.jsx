@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, Mail, Lock, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '@/store/authStore';
+import Logo from '@/components/ui/Logo';
 
 const loginSchema = z.object({
   email:    z.string().email('Please enter a valid email'),
@@ -43,12 +44,7 @@ export default function LoginPage() {
           <div className="floating-orb w-48 h-48 bottom-20 right-10 bg-lavender-200 opacity-40" />
         </div>
         <div className="relative z-10 text-center px-12">
-          <Link to="/" className="flex items-center justify-center gap-3 mb-10">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-lavender-500 flex items-center justify-center shadow-soft-md">
-              <span className="text-white font-bold text-2xl">N</span>
-            </div>
-            <span className="font-bold text-2xl tracking-tight text-text-primary">Nach<span className="text-indigo-500">iketa</span></span>
-          </Link>
+          <Logo to="/" size="xl" className="justify-center mb-10" imgClassName="shadow-soft-md" />
           <blockquote className="text-2xl font-bold text-text-primary leading-snug tracking-tight mb-4 text-balance">
             "The mind is not a vessel to be filled, but a fire to be kindled."
           </blockquote>
@@ -79,12 +75,7 @@ export default function LoginPage() {
           className="w-full max-w-[400px]"
         >
           {/* Mobile logo */}
-          <Link to="/" className="flex items-center gap-2.5 mb-8 lg:hidden">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-lavender-500 flex items-center justify-center">
-              <span className="text-white font-bold">N</span>
-            </div>
-            <span className="font-bold text-xl text-text-primary">Nach<span className="text-indigo-500">iketa</span></span>
-          </Link>
+          <Logo to="/" size="md" className="mb-8 lg:hidden" />
 
           <h1 className="text-2xl font-bold text-text-primary mb-1">Welcome back</h1>
           <p className="text-text-secondary text-sm mb-8">Sign in to your Nachiketa account</p>

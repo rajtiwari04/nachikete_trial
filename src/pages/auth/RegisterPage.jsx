@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, User, Mail, Lock, Phone, GraduationCap, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '@/store/authStore';
+import Logo from '@/components/ui/Logo';
 
 const schema = z.object({
   name:     z.string().min(2, 'Name must be at least 2 characters').max(50),
@@ -63,12 +64,7 @@ export default function RegisterPage() {
           <div className="floating-orb w-48 h-48 bottom-10 right-0 bg-lavender-200 opacity-30" />
         </div>
         <div className="relative z-10 w-full max-w-sm">
-          <Link to="/" className="flex items-center gap-3 mb-10">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-lavender-500 flex items-center justify-center shadow-soft">
-              <span className="text-white font-bold text-lg">N</span>
-            </div>
-            <span className="font-bold text-xl tracking-tight text-text-primary">Nach<span className="text-indigo-500">iketa</span></span>
-          </Link>
+          <Logo to="/" size="lg" className="mb-10" imgClassName="shadow-soft" />
           <h2 className="text-2xl font-bold text-text-primary mb-2">Join our community</h2>
           <p className="text-text-secondary text-sm mb-8">Create your free account and unlock a world of events, workshops, and opportunities.</p>
           <div className="space-y-3">
@@ -93,12 +89,7 @@ export default function RegisterPage() {
           transition={{ duration: 0.5 }}
           className="w-full max-w-[400px] py-8"
         >
-          <Link to="/" className="flex items-center gap-2.5 mb-8 lg:hidden">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-lavender-500 flex items-center justify-center">
-              <span className="text-white font-bold">N</span>
-            </div>
-            <span className="font-bold text-xl text-text-primary">Nach<span className="text-indigo-500">iketa</span></span>
-          </Link>
+          <Logo to="/" size="md" className="mb-8 lg:hidden" />
 
           {/* Step indicator */}
           <div className="flex items-center gap-2 mb-6">
