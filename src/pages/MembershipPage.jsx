@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Check, Zap, Star, Crown, ArrowRight, Lock } from 'lucide-react';
 import toast from 'react-hot-toast';
+import SEO from '@/components/ui/SEO';
 import { membershipAPI, paymentsAPI } from '@/lib/api';
 import useAuthStore from '@/store/authStore';
 import { useNavigate } from 'react-router-dom';
@@ -30,14 +31,14 @@ export default function MembershipPage() {
       const { order, key } = orderData;
       const rzp = new window.Razorpay({
         key, amount: order.amount, currency: order.currency,
-        name: 'Nachiketa Society', description: `${plan.name} Membership`,
+        name: 'Nachiketa Awareness Society', description: `${plan.name} Membership`,
         order_id: order.id,
         prefill: { name: user.name, email: user.email },
         theme: { color: '#6366f1' },
         handler: async (res) => {
           try {
             await paymentsAPI.verify({ ...res, type: 'membership', referenceId: user._id, plan: plan.id });
-            toast.success('Membership activated! Welcome aboard 🎉');
+            toast.success('Membership activated! Welcome to Nachiketa Awareness Society 🎉');
             navigate('/dashboard');
           } catch { toast.error('Payment verification failed. Contact support.'); }
         },
@@ -49,11 +50,17 @@ export default function MembershipPage() {
 
   return (
     <div className="bg-background">
+      <SEO
+        title="Membership | Nachiketa Awareness Society"
+        description="Join Nachiketa Awareness Society. Access awareness sessions, self-development resources, cultural activities, and member community benefits."
+        slug="/membership"
+      />
+
       <div className="border-b border-border bg-gradient-to-br from-indigo-50 to-lavender-50">
         <div className="container-lg section py-16 text-center">
-          <FadeUp><p className="section-label">Membership</p></FadeUp>
-          <FadeUp delay={0.1}><h1 className="text-4xl md:text-5xl font-bold text-text-primary tracking-tight mb-4">Choose your plan</h1></FadeUp>
-          <FadeUp delay={0.2}><p className="section-subtitle mx-auto">Unlock exclusive benefits, early event access, and member-only pricing. Cancel anytime.</p></FadeUp>
+          <FadeUp><p className="section-label">JOIN NACHIKETA</p></FadeUp>
+          <FadeUp delay={0.1}><h1 className="text-4xl md:text-5xl font-bold text-text-primary tracking-tight mb-4">Become a Member</h1></FadeUp>
+          <FadeUp delay={0.2}><p className="section-subtitle mx-auto">Join our community, participate in awareness programs, access learning resources, and help build an informed student community.</p></FadeUp>
         </div>
       </div>
 
@@ -69,7 +76,7 @@ export default function MembershipPage() {
                   <div className={`card relative flex flex-col h-full ${isPopular ? 'border-indigo-200 shadow-soft-lg ring-1 ring-indigo-100' : ''}`}>
                     {isPopular && (
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                        <span className="badge-indigo px-3 py-1 text-xs font-semibold shadow-soft-sm">Most Popular</span>
+                        <span className="badge-indigo px-3 py-1 text-xs font-semibold shadow-soft-sm">Recommended</span>
                       </div>
                     )}
                     <div className={`w-10 h-10 rounded-xl bg-${color}-50 flex items-center justify-center mb-4`}>
@@ -79,7 +86,7 @@ export default function MembershipPage() {
                     <p className="text-text-muted text-sm mb-4">{plan.duration}</p>
                     <div className="mb-6">
                       <span className="text-4xl font-bold text-text-primary">₹{plan.price}</span>
-                      <span className="text-text-muted text-sm ml-1">one-time</span>
+                      <span className="text-text-muted text-sm ml-1">contribution</span>
                     </div>
                     <ul className="space-y-2.5 mb-8 flex-1">
                       {plan.benefits.map(b => (
@@ -90,7 +97,7 @@ export default function MembershipPage() {
                     </ul>
                     <button onClick={() => handleSubscribe(plan)} disabled={loading === plan.id}
                       className={`${isPopular ? 'btn-primary shadow-glow-indigo' : 'btn-secondary'} w-full py-3 disabled:opacity-60`}>
-                      {loading === plan.id ? 'Processing...' : !isAuthenticated ? <><Lock size={13} /> Get {plan.name}</> : `Get ${plan.name}`}
+                      {loading === plan.id ? 'Processing...' : !isAuthenticated ? <><Lock size={13} /> Join as {plan.name}</> : `Join as ${plan.name}`}
                     </button>
                   </div>
                 </FadeUp>

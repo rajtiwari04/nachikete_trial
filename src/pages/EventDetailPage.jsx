@@ -8,12 +8,14 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
+import SEO from '@/components/ui/SEO';
 import { eventsAPI, paymentsAPI } from '@/lib/api';
 import useAuthStore from '@/store/authStore';
 
 const BADGE_MAP = {
-  workshop:'badge-indigo', seminar:'badge-lavender', hackathon:'badge-green',
-  cultural:'badge-amber', technical:'badge-indigo', other:'badge-gray',
+  awareness: 'badge-indigo', wellbeing: 'badge-rose', rights: 'badge-lavender',
+  'self-discovery': 'badge-amber', cultural: 'badge-green', community: 'badge-indigo',
+  workshop: 'badge-indigo', seminar: 'badge-lavender', other: 'badge-gray',
 };
 
 function CountdownTimer({ date }) {
@@ -34,7 +36,7 @@ function CountdownTimer({ date }) {
     return () => clearInterval(id);
   }, [date]);
 
-  if (timeLeft.expired) return <span className="text-rose-500 font-medium text-sm">Event has started</span>;
+  if (timeLeft.expired) return <span className="text-rose-500 font-medium text-sm">Program has started</span>;
 
   return (
     <div className="flex items-center gap-2">
@@ -69,7 +71,7 @@ export default function EventDetailPage() {
   const registerMutation = useMutation({
     mutationFn: () => eventsAPI.register(event._id),
     onSuccess: (res) => {
-      toast.success('Registered successfully! Check your email for the ticket.');
+      toast.success('Registered successfully! Check your email for details.');
       qc.invalidateQueries(['event', slug]);
     },
     onError: (err) => toast.error(err.message || 'Registration failed'),
@@ -87,7 +89,7 @@ export default function EventDetailPage() {
         key,
         amount:   order.amount,
         currency: order.currency,
-        name:     'Nachiketa Society',
+        name:     'Nachiketa Awareness Society',
         description: event.title,
         order_id: order.id,
         prefill: { name: user.name, email: user.email, contact: user.phone },
@@ -138,9 +140,9 @@ export default function EventDetailPage() {
   if (error || !event) return (
     <div className="container-md section text-center py-24">
       <AlertCircle size={40} className="text-rose-300 mx-auto mb-4" />
-      <h2 className="text-xl font-bold text-text-primary mb-2">Event not found</h2>
-      <p className="text-text-muted mb-6">This event may have been removed or doesn't exist.</p>
-      <Link to="/events" className="btn-primary">Browse all events</Link>
+      <h2 className="text-xl font-bold text-text-primary mb-2">Program not found</h2>
+      <p className="text-text-muted mb-6">This session or program may have been removed or doesn't exist.</p>
+      <Link to="/events" className="btn-primary">Browse all programs</Link>
     </div>
   );
 
@@ -148,13 +150,42 @@ export default function EventDetailPage() {
   const isUpcoming = event.status === 'upcoming';
   const isSoldOut  = event.isSoldOut;
 
+  const eventSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.title,
+    description: event.shortDescription || event.description,
+    startDate: event.date,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: {
+      '@type': 'Place',
+      name: event.venue?.name || 'Nachiketa Campus',
+      address: event.venue?.address || 'Campus Venue',
+    },
+    organizer: {
+      '@type': 'Organization',
+      name: 'Nachiketa Awareness Society',
+      url: window.location.origin,
+    },
+  };
+
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={`${event.title} | Nachiketa Awareness Society`}
+        description={event.shortDescription || event.description || 'Join this awareness and community program organized by Nachiketa Awareness Society.'}
+        image={event.banner || 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80'}
+        type="event"
+        slug={`/events/${event.slug}`}
+        schema={eventSchema}
+      />
+
       {/* ─── Back nav ──────────────────────────────────────────────────────── */}
       <div className="border-b border-border bg-cream-50/50 py-3">
         <div className="container-lg px-4">
           <Link to="/events" className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-indigo-600 transition-colors">
-            <ArrowLeft size={15} /> Back to events
+            <ArrowLeft size={15} /> Back to programs
           </Link>
         </div>
       </div>
@@ -166,7 +197,7 @@ export default function EventDetailPage() {
             initial={{ scale: 1.05, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.8 }}
-            src={event.banner} alt={event.title}
+            src={event.banner} alt={`Banner for ${event.title}`}
             className="w-full h-full object-cover"
           />
         </div>
@@ -184,11 +215,11 @@ export default function EventDetailPage() {
                 {event.status === 'upcoming' && <span className="badge-green">Upcoming</span>}
                 {event.status === 'ongoing'  && <span className="badge-indigo">Live Now</span>}
                 {event.status === 'completed'&& <span className="badge-gray">Completed</span>}
-                {event.certificateProvided   && <span className="badge-lavender flex items-center gap-1"><Award size={10} /> Certificate</span>}
+                {event.certificateProvided   && <span className="badge-lavender flex items-center gap-1"><Award size={10} /> Participation Certificate</span>}
                 {event.isPaid ? (
                   <span className="badge bg-amber-50 text-amber-700 border border-amber-100">₹{price}</span>
                 ) : (
-                  <span className="badge-green">Free Event</span>
+                  <span className="badge-green">Free Session</span>
                 )}
               </div>
 
@@ -202,7 +233,7 @@ export default function EventDetailPage() {
                   { icon: Calendar, label: 'Date',  value: format(new Date(event.date), 'EEEE, MMM d, yyyy') },
                   { icon: Clock,    label: 'Time',  value: event.time || 'TBA' },
                   { icon: MapPin,   label: 'Venue', value: event.venue?.name || 'TBA' },
-                  { icon: Users,    label: 'Registered', value: `${event.registeredCount}${event.maxSeats ? ` / ${event.maxSeats}` : '+'} people` },
+                  { icon: Users,    label: 'Attending', value: `${event.registeredCount}${event.maxSeats ? ` / ${event.maxSeats}` : '+'} students` },
                 ].map(({ icon: Icon, label, value }) => (
                   <div key={label} className="flex items-start gap-2.5">
                     <div className="w-8 h-8 rounded-lg bg-white border border-border flex items-center justify-center flex-shrink-0 shadow-soft-xs">
@@ -219,7 +250,7 @@ export default function EventDetailPage() {
 
             {/* Description */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-              <h2 className="text-xl font-bold text-text-primary mb-3">About this event</h2>
+              <h2 className="text-xl font-bold text-text-primary mb-3">About this program</h2>
               <div className="prose prose-sm max-w-none text-text-secondary leading-relaxed whitespace-pre-line">
                 {event.description}
               </div>
@@ -229,7 +260,7 @@ export default function EventDetailPage() {
             {event.whatYouLearn?.length > 0 && (
               <div>
                 <h2 className="text-xl font-bold text-text-primary mb-4 flex items-center gap-2">
-                  <BookOpen size={18} className="text-indigo-500" /> What you'll learn
+                  <BookOpen size={18} className="text-indigo-500" /> What you will learn & experience
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {event.whatYouLearn.map((item, i) => (
@@ -245,7 +276,7 @@ export default function EventDetailPage() {
             {/* Prerequisites */}
             {event.prerequisites?.length > 0 && (
               <div>
-                <h2 className="text-xl font-bold text-text-primary mb-4">Prerequisites</h2>
+                <h2 className="text-xl font-bold text-text-primary mb-4">Preparation / Things to bring</h2>
                 <ul className="space-y-2">
                   {event.prerequisites.map((p, i) => (
                     <li key={i} className="flex items-center gap-2 text-sm text-text-secondary">
@@ -256,10 +287,10 @@ export default function EventDetailPage() {
               </div>
             )}
 
-            {/* Speakers */}
+            {/* Speakers / Facilitators */}
             {event.speakers?.length > 0 && (
               <div>
-                <h2 className="text-xl font-bold text-text-primary mb-4">Speakers</h2>
+                <h2 className="text-xl font-bold text-text-primary mb-4">Speakers & Facilitators</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {event.speakers.map((speaker, i) => (
                     <div key={i} className="flex items-center gap-3 p-4 card">
@@ -299,7 +330,7 @@ export default function EventDetailPage() {
                       )}
                     </div>
                   ) : (
-                    <p className="text-3xl font-bold text-sage-600">Free</p>
+                    <p className="text-3xl font-bold text-sage-600">Free Program</p>
                   )}
                 </div>
 
@@ -315,7 +346,7 @@ export default function EventDetailPage() {
                 {event.maxSeats && (
                   <div className="mb-5">
                     <div className="flex justify-between text-xs text-text-muted mb-1.5">
-                      <span>{event.maxSeats - event.registeredCount} seats left</span>
+                      <span>{event.maxSeats - event.registeredCount} seats remaining</span>
                       <span>{Math.round((event.registeredCount / event.maxSeats) * 100)}% filled</span>
                     </div>
                     <div className="h-1.5 bg-cream-200 rounded-full overflow-hidden">
@@ -333,18 +364,18 @@ export default function EventDetailPage() {
                     <CheckCircle size={18} className="text-sage-500" />
                     <div>
                       <p className="text-sm font-semibold text-sage-700">You're registered!</p>
-                      <p className="text-xs text-sage-600">Check your email for the ticket.</p>
+                      <p className="text-xs text-sage-600">Check your email for confirmation details.</p>
                     </div>
                   </div>
                 ) : event.status === 'completed' ? (
                   <div className="flex items-center gap-2 p-3 bg-cream-50 rounded-xl border border-border">
                     <AlertCircle size={16} className="text-text-muted" />
-                    <p className="text-sm text-text-muted">This event has ended.</p>
+                    <p className="text-sm text-text-muted">This program has concluded.</p>
                   </div>
                 ) : isSoldOut ? (
                   <div className="flex items-center gap-2 p-3 bg-rose-50 rounded-xl border border-rose-100">
                     <AlertCircle size={16} className="text-rose-500" />
-                    <p className="text-sm text-rose-600 font-medium">Sold out</p>
+                    <p className="text-sm text-rose-600 font-medium">Capacity full</p>
                   </div>
                 ) : (
                   <button
@@ -375,7 +406,7 @@ export default function EventDetailPage() {
                 {/* Member discount notice */}
                 {!isMember() && event.memberPrice && event.memberPrice < event.price && (
                   <div className="mt-3 p-3 bg-indigo-50 rounded-xl border border-indigo-100">
-                    <p className="text-xs text-indigo-700 font-medium">Members get this event at ₹{event.memberPrice}</p>
+                    <p className="text-xs text-indigo-700 font-medium">Members get this session at ₹{event.memberPrice}</p>
                     <Link to="/membership" className="text-xs text-indigo-600 hover:underline mt-0.5 block">Get membership →</Link>
                   </div>
                 )}
@@ -385,7 +416,7 @@ export default function EventDetailPage() {
                   onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success('Link copied!'); }}
                   className="btn-ghost w-full mt-3 text-sm gap-2 text-text-muted"
                 >
-                  <Share2 size={14} /> Share event
+                  <Share2 size={14} /> Share program
                 </button>
               </motion.div>
 

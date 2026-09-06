@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Search, BookOpen, Clock, ArrowRight, Tag } from 'lucide-react';
+import SEO from '@/components/ui/SEO';
 import { blogsAPI } from '@/lib/api';
 import { format } from 'date-fns';
 
@@ -10,8 +11,11 @@ const FadeUp = ({ children, delay=0, className='' }) => (
   <motion.div initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true,margin:"-60px"}}
     transition={{duration:0.55,delay,ease:[0.16,1,0.3,1]}} className={className}>{children}</motion.div>
 );
-const CATS = ['all','technology','events','society','achievements','tips'];
-const CAT_COLORS = { technology:'badge-indigo', events:'badge-lavender', society:'badge-green', achievements:'badge-amber', tips:'badge-rose', other:'badge-gray' };
+const CATS = ['all', 'awareness', 'wellbeing', 'rights', 'self-discovery', 'society', 'tips'];
+const CAT_COLORS = {
+  awareness: 'badge-indigo', wellbeing: 'badge-rose', rights: 'badge-lavender',
+  'self-discovery': 'badge-amber', society: 'badge-green', tips: 'badge-amber', other: 'badge-gray'
+};
 
 function BlogCard({ blog, delay }) {
   return (
@@ -33,7 +37,7 @@ function BlogCard({ blog, delay }) {
           <div className="flex items-center justify-between mt-auto pt-3 border-t border-border">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-600">
-                {blog.author?.name?.[0]||'?'}
+                {blog.author?.name?.[0]||'N'}
               </div>
               <span className="text-xs text-text-muted">{blog.author?.name||'Nachiketa'}</span>
             </div>
@@ -93,12 +97,18 @@ export default function BlogsPage() {
 
   return (
     <div className="bg-background min-h-screen">
+      <SEO
+        title="Nachiketa Blog | Awareness, Wellbeing & Student Growth"
+        description="Articles, guides, awareness insights, and student perspectives from Nachiketa Awareness Society."
+        slug="/blogs"
+      />
+
       <div className="border-b border-border bg-cream-50/50">
         <div className="container-lg section py-12">
           <FadeUp>
-            <p className="section-label">Knowledge hub</p>
+            <p className="section-label">AWARENESS & ARTICLES</p>
             <h1 className="section-title">Blog & Articles</h1>
-            <p className="section-subtitle">Insights, tutorials, event recaps, and stories from the Nachiketa community.</p>
+            <p className="section-subtitle">Insights, self-discovery guides, rights awareness, wellbeing tips, and stories from the Nachiketa community.</p>
           </FadeUp>
         </div>
       </div>
@@ -109,12 +119,12 @@ export default function BlogsPage() {
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <div className="relative flex-1">
             <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted"/>
-            <input value={search} onChange={e=>{setSearch(e.target.value);setPage(1);}} placeholder="Search articles..." className="input pl-9 text-sm"/>
+            <input value={search} onChange={e=>{setSearch(e.target.value);setPage(1);}} placeholder="Search awareness articles..." className="input pl-9 text-sm"/>
           </div>
         </div>
         <div className="flex gap-2 flex-wrap mb-8">
           {CATS.map(c => (
-            <button key={c} onClick={()=>{setCategory(c);setPage(1);}} className={"px-3.5 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 " + (category===c ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-surface border-border text-text-secondary hover:border-indigo-200 hover:text-indigo-600')}>
+            <button key={c} onClick={()=>{setCategory(c);setPage(1);}} className={"px-3.5 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 " + (category===c ? 'bg-indigo-500 text-white border-indigo-500 shadow-soft-sm' : 'bg-surface border-border text-text-secondary hover:border-indigo-200 hover:text-indigo-600')}>
               {c==='all'?'All':c.charAt(0).toUpperCase()+c.slice(1)}
             </button>
           ))}

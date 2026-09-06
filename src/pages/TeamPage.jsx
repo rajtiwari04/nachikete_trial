@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Linkedin, Instagram, Mail } from 'lucide-react';
+import SEO from '@/components/ui/SEO';
 import { teamAPI } from '@/lib/api';
 
 const FadeUp = ({ children, delay = 0, className = '' }) => (
@@ -17,11 +18,11 @@ const FadeUp = ({ children, delay = 0, className = '' }) => (
 );
 
 const DEPT_LABELS = {
-  core:       'Core Team',
-  technical:  'Technical',
-  creative:   'Creative',
-  marketing:  'Marketing',
-  management: 'Management',
+  core:       'Core Leadership',
+  technical:  'Technical & Web',
+  creative:   'Creative & Content',
+  marketing:  'Outreach & Media',
+  management: 'Program Management',
   advisor:    'Faculty Advisors',
 };
 
@@ -55,7 +56,6 @@ function MemberCard({ member, delay }) {
 
   const grad = AVATAR_GRADIENTS[member.name.charCodeAt(0) % AVATAR_GRADIENTS.length];
 
-  // Check if member has any social links to show
   const hasLinkedin  = member.socialLinks?.linkedin;
   const hasInstagram = member.socialLinks?.instagram;
   const hasEmail     = member.email;
@@ -70,7 +70,7 @@ function MemberCard({ member, delay }) {
           {member.avatar ? (
             <img
               src={member.avatar}
-              alt={member.name}
+              alt={`${member.name} - ${member.designation} at Nachiketa Awareness Society`}
               className="w-20 h-20 rounded-2xl object-cover shadow-soft"
             />
           ) : (
@@ -108,7 +108,7 @@ function MemberCard({ member, delay }) {
           </p>
         )}
 
-        {/* ── Social links: LinkedIn + Instagram + Email only ─────────── */}
+        {/* ── Social links ────────────────────────────────────────────── */}
         {hasSocials && (
           <div className="flex items-center justify-center gap-2.5 mt-auto pt-4 border-t border-border">
 
@@ -124,7 +124,6 @@ function MemberCard({ member, delay }) {
                 <Linkedin size={15} />
               </a>
             ) : (
-              /* Show placeholder slot so layout stays consistent */
               <div className="w-8 h-8 rounded-xl bg-cream-50 border border-dashed border-cream-300 flex items-center justify-center">
                 <Linkedin size={13} className="text-cream-400" />
               </div>
@@ -147,7 +146,7 @@ function MemberCard({ member, delay }) {
               </div>
             )}
 
-            {/* Email (optional — only if provided) */}
+            {/* Email */}
             {hasEmail && (
               <a
                 href={`mailto:${member.email}`}
@@ -160,10 +159,9 @@ function MemberCard({ member, delay }) {
           </div>
         )}
 
-        {/* If no socials at all, show a subtle "reach out" note */}
         {!hasSocials && (
           <div className="mt-auto pt-4 border-t border-border">
-            <p className="text-2xs text-text-muted italic">Links coming soon</p>
+            <p className="text-2xs text-text-muted italic">Member Lead</p>
           </div>
         )}
       </div>
@@ -194,11 +192,9 @@ export default function TeamPage() {
 
   const members = data?.data?.members || [];
 
-  // Build department list based on actual data
   const presentDepts = DEPT_ORDER.filter(d => members.some(m => m.department === d));
   const departments  = ['all', ...presentDepts];
 
-  // Group members by department, filtered by activeDept
   const grouped = DEPT_ORDER.reduce((acc, dept) => {
     const filtered = members.filter(
       m => m.department === dept && (activeDept === 'all' || activeDept === dept)
@@ -209,16 +205,20 @@ export default function TeamPage() {
 
   return (
     <div className="bg-background min-h-screen">
+      <SEO
+        title="Nachiketa Team | Student Community Leaders"
+        description="Meet the student leads, organizers, and faculty advisors behind Nachiketa Awareness Society."
+        slug="/team"
+      />
 
       {/* ── Page header ───────────────────────────────────────────────── */}
       <div className="border-b border-border bg-gradient-to-br from-indigo-50 via-cream-50 to-lavender-50">
         <div className="container-lg section py-16">
           <FadeUp className="max-w-2xl">
-            <p className="section-label">The people</p>
+            <p className="section-label">OUR TEAM</p>
             <h1 className="section-title">Meet our Team</h1>
             <p className="section-subtitle">
-              The passionate minds behind Nachiketa — students who give their time, energy,
-              and ideas to build something extraordinary.
+              The passionate minds behind Nachiketa — students dedicated to building an aware, informed, healthy, and empowered community.
             </p>
           </FadeUp>
         </div>
@@ -290,7 +290,7 @@ export default function TeamPage() {
               <Linkedin size={14} className="text-[#0077B5]" />
               <Instagram size={14} className="text-[#c13584]" />
               <span className="text-sm text-text-secondary ml-1">
-                Connect with our members on LinkedIn & Instagram
+                Connect with our team members on LinkedIn & Instagram
               </span>
             </div>
           </FadeUp>

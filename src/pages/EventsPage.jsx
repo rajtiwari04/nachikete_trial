@@ -2,18 +2,20 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Calendar, Search, Filter, SlidersHorizontal, ArrowRight, MapPin, Clock, X } from 'lucide-react';
+import { Calendar, Search, Filter, ArrowRight, MapPin, Clock, X } from 'lucide-react';
+import SEO from '@/components/ui/SEO';
 import { eventsAPI } from '@/lib/api';
 import { format } from 'date-fns';
 
-const CATEGORIES = ['all','workshop','seminar','hackathon','cultural','sports','technical','social','other'];
-const STATUS_OPTS = ['all','upcoming','ongoing','completed'];
+const CATEGORIES = ['all', 'awareness', 'wellbeing', 'rights', 'self-discovery', 'cultural', 'community', 'workshop', 'seminar', 'other'];
+const STATUS_OPTS = ['all', 'upcoming', 'ongoing', 'completed'];
 
 const BADGE_MAP = {
-  workshop: 'badge-indigo', seminar: 'badge-lavender', hackathon: 'badge-green',
-  cultural: 'badge-amber', sports: 'badge-green', technical: 'badge-indigo',
-  social: 'badge-lavender', other: 'badge-gray',
+  awareness: 'badge-indigo', wellbeing: 'badge-rose', rights: 'badge-lavender',
+  'self-discovery': 'badge-amber', cultural: 'badge-green', community: 'badge-indigo',
+  workshop: 'badge-indigo', seminar: 'badge-lavender', hackathon: 'badge-gray', other: 'badge-gray',
 };
+
 const STATUS_MAP = {
   upcoming: 'badge-green', ongoing: 'badge-indigo', completed: 'badge-gray', cancelled: 'badge-red',
 };
@@ -128,14 +130,20 @@ export default function EventsPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Nachiketa Programs & Events | Student Awareness Sessions"
+        description="Awareness sessions, self-development programs, wellbeing initiatives, cultural activities and meaningful conversations organized by Nachiketa Awareness Society."
+        slug="/events"
+      />
+
       {/* ─── Page header ─────────────────────────────────────────────────────── */}
       <div className="border-b border-border bg-cream-50/50">
         <div className="container-lg section py-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <p className="section-label">Discover</p>
-            <h1 className="section-title">All Events</h1>
+            <p className="section-label">OUR PROGRAMS</p>
+            <h1 className="section-title">Awareness & Community Programs</h1>
             <p className="section-subtitle">
-              From hackathons to cultural events — {total > 0 && <span className="text-indigo-600 font-semibold">{total} events</span>} curated for your growth.
+              Awareness sessions, self-development programs, wellbeing initiatives, cultural activities and meaningful conversations for students.
             </p>
           </motion.div>
         </div>
@@ -150,7 +158,7 @@ export default function EventsPage() {
               type="text"
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(1); }}
-              placeholder="Search events..."
+              placeholder="Search programs & sessions..."
               className="input pl-9 text-sm"
             />
           </div>
@@ -208,13 +216,15 @@ export default function EventsPage() {
             )}
           </>
         ) : (
-          <div className="text-center py-20 bg-cream-50 rounded-2xl border border-border">
+          <div className="text-center py-16 bg-cream-50 rounded-2xl border border-border max-w-lg mx-auto p-8">
             <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Calendar size={28} className="text-indigo-300" />
+              <Calendar size={28} className="text-indigo-400" />
             </div>
-            <h3 className="text-lg font-semibold text-text-primary mb-2">No events found</h3>
-            <p className="text-text-muted text-sm mb-5">Try adjusting your filters or search query.</p>
-            {hasFilters && <button onClick={clearFilters} className="btn-secondary">Clear filters</button>}
+            <h3 className="text-lg font-bold text-text-primary mb-2">New Programs Coming Soon</h3>
+            <p className="text-text-secondary text-xs sm:text-sm mb-6 leading-relaxed">
+              We are preparing our next set of awareness sessions, self-discovery activities and community programs. Check back soon for dates and registration details.
+            </p>
+            {hasFilters && <button onClick={clearFilters} className="btn-secondary text-xs px-5 py-2">Clear filters</button>}
           </div>
         )}
       </div>

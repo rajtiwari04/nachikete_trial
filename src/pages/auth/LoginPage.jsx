@@ -46,16 +46,15 @@ export default function LoginPage() {
         <div className="relative z-10 text-center px-12">
           <Logo to="/" size="xl" className="justify-center mb-10" imgClassName="shadow-soft-md" />
           <blockquote className="text-2xl font-bold text-text-primary leading-snug tracking-tight mb-4 text-balance">
-            "The mind is not a vessel to be filled, but a fire to be kindled."
+            "Awareness is the first step toward meaningful change."
           </blockquote>
-          <p className="text-text-secondary text-sm">Join thousands of curious minds at Nachiketa Society.</p>
+          <p className="text-text-secondary text-sm">Join our student community at Nachiketa Awareness Society.</p>
 
-          <div className="mt-12 grid grid-cols-2 gap-4 text-left">
+          <div className="mt-12 grid grid-cols-3 gap-4 text-left">
             {[
-              { value: '2,000+', label: 'Active members' },
-              { value: '150+',   label: 'Events hosted' },
-              { value: '50+',    label: 'Awards won' },
-              { value: '8+',     label: 'Years of legacy' },
+              { value: '200+', label: 'Student Members' },
+              { value: '5+',    label: 'Awareness Sessions' },
+              { value: '2024',  label: 'Established' },
             ].map(({ value, label }) => (
               <div key={label} className="card-glass px-4 py-3">
                 <p className="text-xl font-bold gradient-text">{value}</p>
@@ -133,7 +132,7 @@ export default function LoginPage() {
             <div className="flex items-center gap-2 p-3 bg-indigo-50 rounded-xl border border-indigo-100">
               <Sparkles size={14} className="text-indigo-500 flex-shrink-0" />
               <p className="text-xs text-indigo-700">
-                New here? <Link to="/register" className="font-semibold hover:underline">Join Nachiketa</Link> and unlock all features.
+                New here? <Link to="/register" className="font-semibold hover:underline">Join Nachiketa</Link> and unlock all community features.
               </p>
             </div>
           </div>

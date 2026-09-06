@@ -2,22 +2,45 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '@/components/ui/SEO';
 
 const FadeUp = ({ children, delay=0, className='' }) => (
   <motion.div initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.55,delay}} className={className}>{children}</motion.div>
 );
 
 const FAQS = [
-  { q: 'What is Nachiketa Society?', a: 'Nachiketa is a premier college society dedicated to fostering innovation, technical excellence, and community among students. We organize events, workshops, hackathons, and seminars throughout the year.' },
-  { q: 'How do I join Nachiketa?', a: 'Simply create a free account on our website! You can then register for events. For full membership benefits (discounts, priority access), you can purchase a membership plan from our Membership page.' },
-  { q: 'Are all events free?', a: 'Many events are completely free. Some premium events like hackathons may have a small registration fee. Members always get discounted pricing on paid events.' },
-  { q: 'How does the membership work?', a: 'We offer three membership tiers — Basic (6 months), Premium (1 year), and Lifetime. Members get event discounts, priority registration, certificates, and exclusive access to member-only events.' },
-  { q: 'Will I get a certificate for attending workshops?', a: 'Yes! For workshops and events where certificates are offered, you will receive a digital certificate automatically upon completion. Check the event details page to see if a certificate is included.' },
-  { q: 'How do I get my QR ticket after registration?', a: 'After successful registration (free or paid), your QR ticket is sent to your registered email and also available in your dashboard. Present the QR code at the venue for entry.' },
-  { q: 'Can I get a refund if I cancel my registration?', a: 'Refunds are considered on a case-by-case basis. For paid events, contact us at least 48 hours before the event. For membership, contact us within 7 days of purchase.' },
-  { q: 'How can I become part of the core team?', a: 'We open applications for team positions at the beginning of each academic year. Watch our social media and the website for announcements about team recruitment.' },
-  { q: 'Is there a mobile app?', a: 'Our website is fully responsive and works great on mobile devices. A dedicated mobile app is in our roadmap for future development.' },
-  { q: 'How can my company sponsor Nachiketa?', a: 'We would love to partner with you! Please reach out via our Contact page or email us at sponsors@nachiketa.in. We offer various sponsorship tiers with great visibility.' },
+  {
+    q: 'What is Nachiketa Awareness Society?',
+    a: 'Nachiketa Awareness Society is a student-led community dedicated to creating awareness, encouraging self-discovery, promoting health and wellbeing, understanding civic rights & responsibilities, and organizing cultural activities that build a responsible, informed student community.',
+  },
+  {
+    q: 'How do I join Nachiketa?',
+    a: 'You can create a free student account on our website to stay updated on upcoming programs. To become an active member and unlock member benefits, register through our Membership page.',
+  },
+  {
+    q: 'What kinds of sessions and programs does Nachiketa conduct?',
+    a: 'We organize awareness drives, self-discovery workshops, health and nutrition bootcamps, rights and responsibilities discussions, government scheme guidance, confidence & communication sessions, and cultural community events.',
+  },
+  {
+    q: 'Are Nachiketa awareness sessions free to attend?',
+    a: 'Most of our awareness sessions and community discussions are completely free for students. Some multi-day bootcamps or specialized programs may have nominal charges, with discounts for society members.',
+  },
+  {
+    q: 'How does society membership work?',
+    a: 'We offer membership options (Basic, Premium, Lifetime). Members get priority access to sessions, special program discounts, participation certificates, and active involvement in community initiatives.',
+  },
+  {
+    q: 'Do I get a participation certificate for sessions?',
+    a: 'Yes, for structured workshops, bootcamps, and awareness drives where certificates are provided, digital certificates are issued upon completion.',
+  },
+  {
+    q: 'How can I join the student lead team or organize a session?',
+    a: 'We encourage active student participation! You can express your interest through our contact page or during our team recruitment drives held each academic session.',
+  },
+  {
+    q: 'Can our student group or college partner with Nachiketa for an awareness drive?',
+    a: 'Absolutely! We welcome collaborations for educational, wellbeing, and social awareness programs. Reach out to us via our Contact page.',
+  },
 ];
 
 function FAQItem({ faq, index }) {
@@ -44,12 +67,18 @@ function FAQItem({ faq, index }) {
 export default function FAQPage() {
   return (
     <div className="bg-background min-h-screen">
+      <SEO
+        title="FAQ | Nachiketa Awareness Society"
+        description="Find answers to common questions about Nachiketa Awareness Society, membership, awareness programs, and student community initiatives."
+        slug="/faq"
+      />
+
       <div className="border-b border-border bg-cream-50/50">
         <div className="container-lg section py-12">
           <FadeUp className="max-w-2xl">
-            <p className="section-label">Help center</p>
+            <p className="section-label">HELP CENTER</p>
             <h1 className="section-title">Frequently Asked Questions</h1>
-            <p className="section-subtitle">Find answers to the most common questions about Nachiketa Society.</p>
+            <p className="section-subtitle">Find answers to the most common questions about Nachiketa Awareness Society.</p>
           </FadeUp>
         </div>
       </div>
@@ -61,7 +90,7 @@ export default function FAQPage() {
           <div className="card bg-gradient-to-br from-indigo-50 to-lavender-50 border-indigo-100 text-center p-8">
             <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><MessageSquare size={20} className="text-indigo-500"/></div>
             <h3 className="font-bold text-text-primary mb-2">Still have questions?</h3>
-            <p className="text-text-secondary text-sm mb-5">Our team is happy to help. Reach out and we will get back to you within 24 hours.</p>
+            <p className="text-text-secondary text-sm mb-5">Our team is happy to help. Reach out and we will get back to you soon.</p>
             <Link to="/contact" className="btn-primary px-8 py-2.5">Contact us</Link>
           </div>
         </FadeUp>

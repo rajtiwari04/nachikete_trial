@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Award, Trophy, Star, Calendar, Users } from 'lucide-react';
+import SEO from '@/components/ui/SEO';
 import { achievementsAPI } from '@/lib/api';
 import { format } from 'date-fns';
 
@@ -8,8 +9,8 @@ const FadeUp = ({ children, delay=0, className='' }) => (
   <motion.div initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true,margin:"-60px"}}
     transition={{duration:0.55,delay}} className={className}>{children}</motion.div>
 );
-const CAT_COLORS = { award:'badge-amber', competition:'badge-indigo', recognition:'badge-lavender', milestone:'badge-green', other:'badge-gray' };
-const CAT_ICONS = { award: Trophy, competition: Award, recognition: Star, milestone: Star, other: Award };
+const CAT_COLORS = { award:'badge-amber', program:'badge-indigo', recognition:'badge-lavender', milestone:'badge-green', other:'badge-gray' };
+const CAT_ICONS = { award: Trophy, program: Award, recognition: Star, milestone: Star, other: Award };
 
 export default function AchievementsPage() {
   const { data, isLoading } = useQuery({ queryKey: ['achievements'], queryFn: () => achievementsAPI.getAll() });
@@ -19,12 +20,18 @@ export default function AchievementsPage() {
 
   return (
     <div className="bg-background min-h-screen">
+      <SEO
+        title="Nachiketa Milestones | Awareness & Community Impact"
+        description="A showcase of awareness initiatives, community impact, and society milestones achieved by Nachiketa Awareness Society."
+        slug="/achievements"
+      />
+
       <div className="border-b border-border bg-gradient-to-br from-amber-50 via-cream-50 to-indigo-50">
         <div className="container-lg section py-16">
           <FadeUp className="max-w-2xl">
-            <p className="section-label">Recognition</p>
-            <h1 className="section-title">Our Achievements</h1>
-            <p className="section-subtitle">A showcase of the awards, victories, and milestones that define the Nachiketa legacy.</p>
+            <p className="section-label">COMMUNITY IMPACT</p>
+            <h1 className="section-title">Milestones & Initiatives</h1>
+            <p className="section-subtitle">A showcase of awareness drives, community participation, and society milestones since our founding in 2024.</p>
           </FadeUp>
         </div>
       </div>
@@ -32,12 +39,12 @@ export default function AchievementsPage() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">{[...Array(4)].map((_,i)=><div key={i} className="card animate-pulse"><div className="skeleton h-5 w-3/4 rounded mb-3"/><div className="skeleton h-3 w-full rounded"/></div>)}</div>
         ) : achievements.length === 0 ? (
-          <div className="text-center py-20 bg-cream-50 rounded-2xl border border-border"><Trophy size={36} className="text-amber-200 mx-auto mb-3"/><p className="text-text-muted">Achievements coming soon!</p></div>
+          <div className="text-center py-20 bg-cream-50 rounded-2xl border border-border"><Trophy size={36} className="text-amber-200 mx-auto mb-3"/><p className="text-text-muted">Community milestones coming soon!</p></div>
         ) : (
           <>
             {featured.length > 0 && (
               <div className="mb-12">
-                <FadeUp><h2 className="text-xl font-bold text-text-primary mb-6 flex items-center gap-2"><Trophy size={20} className="text-amber-500"/> Featured Achievements</h2></FadeUp>
+                <FadeUp><h2 className="text-xl font-bold text-text-primary mb-6 flex items-center gap-2"><Trophy size={20} className="text-amber-500"/> Featured Milestones</h2></FadeUp>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                   {featured.map((a,i)=>{
                     const Icon = CAT_ICONS[a.category]||Award;
@@ -64,7 +71,7 @@ export default function AchievementsPage() {
             )}
             {rest.length > 0 && (
               <div>
-                <FadeUp><h2 className="text-xl font-bold text-text-primary mb-6">All Achievements</h2></FadeUp>
+                <FadeUp><h2 className="text-xl font-bold text-text-primary mb-6">All Milestones</h2></FadeUp>
                 <div className="space-y-3">
                   {rest.map((a,i)=>{
                     const Icon = CAT_ICONS[a.category]||Award;

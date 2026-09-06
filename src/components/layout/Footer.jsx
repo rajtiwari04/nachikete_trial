@@ -7,12 +7,12 @@ const FOOTER_LINKS = {
   Society: [
     { label: 'About Us',      href: '/about' },
     { label: 'Our Team',      href: '/team' },
-    { label: 'Achievements',  href: '/achievements' },
+    { label: 'Milestones',    href: '/achievements' },
     { label: 'Gallery',       href: '/gallery' },
     { label: 'Sponsors',      href: '/sponsors' },
   ],
   Explore: [
-    { label: 'Events',        href: '/events' },
+    { label: 'Programs',      href: '/events' },
     { label: 'Blog',          href: '/blogs' },
     { label: 'Membership',    href: '/membership' },
     { label: 'FAQ',           href: '/faq' },
@@ -21,7 +21,6 @@ const FOOTER_LINKS = {
 };
 
 const SOCIALS = [
-  { icon: Github,    href: 'https://github.com',    label: 'GitHub' },
   { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
   { icon: Linkedin,  href: 'https://linkedin.com',  label: 'LinkedIn' },
   { icon: Twitter,   href: 'https://twitter.com',   label: 'Twitter' },
@@ -34,11 +33,11 @@ export default function Footer() {
       <div className="bg-gradient-to-r from-indigo-50 via-lavender-50 to-cream-100 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <h3 className="text-2xl font-bold text-text-primary tracking-tight">Ready to join Nachiketa?</h3>
-            <p className="text-text-secondary mt-1">Become a member and unlock exclusive benefits, early event access, and more.</p>
+            <h3 className="text-2xl font-bold text-text-primary tracking-tight">Be part of a more aware community.</h3>
+            <p className="text-text-secondary mt-1">Join Nachiketa Awareness Society and participate in sessions that inspire positive change.</p>
           </div>
           <div className="flex items-center gap-3 flex-shrink-0">
-            <Link to="/membership" className="btn-primary px-6 py-2.5">Get Membership</Link>
+            <Link to="/membership" className="btn-primary px-6 py-2.5">Join Nachiketa</Link>
             <Link to="/about" className="btn-secondary px-6 py-2.5">Learn More</Link>
           </div>
         </div>
@@ -52,7 +51,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <Logo to="/" size="md" className="mb-4" imgClassName="shadow-soft-sm" />
             <p className="text-sm text-text-secondary leading-relaxed mb-5 max-w-xs">
-              Where curiosity meets excellence. A premier college society dedicated to innovation, creativity, and technical growth.
+              Nachiketa Awareness Society is a student-led community focused on awareness, self-discovery, wellbeing, cultural activities and meaningful social participation.
             </p>
             <div className="flex items-center gap-2.5">
               {SOCIALS.map(({ icon: Icon, href, label }) => (
@@ -87,7 +86,7 @@ export default function Footer() {
               {[
                 { icon: Mail,    text: 'hello@nachiketa.in',       href: 'mailto:hello@nachiketa.in' },
                 { icon: Phone,   text: '+91 98765 43210',          href: 'tel:+919876543210' },
-                { icon: MapPin,  text: 'LU',  href: null },
+                { icon: MapPin,  text: 'Nachiketa Awareness Society', href: null },
               ].map(({ icon: Icon, text, href }) => (
                 <li key={text}>
                   {href ? (
@@ -106,8 +105,8 @@ export default function Footer() {
             </ul>
 
             <div className="mt-6 p-3 bg-indigo-50 rounded-xl border border-indigo-100">
-              <p className="text-xs font-medium text-indigo-700">Stay in the loop</p>
-              <p className="text-xs text-indigo-600 mt-0.5">Follow us on social media for the latest events and updates.</p>
+              <p className="text-xs font-medium text-indigo-700">Stay Aware & Informed</p>
+              <p className="text-xs text-indigo-600 mt-0.5">Follow our community updates and upcoming awareness sessions.</p>
             </div>
           </div>
         </div>
@@ -115,7 +114,7 @@ export default function Footer() {
         {/* ─── Bottom bar ──────────────────────────────────────────────────── */}
         <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-text-muted flex items-center gap-1">
-            © {new Date().getFullYear()} Nachiketa Society. Made with <Heart size={12} className="text-rose-400 fill-rose-400" /> by the team.
+            © {new Date().getFullYear()} Nachiketa Awareness Society. Made with <Heart size={12} className="text-rose-400 fill-rose-400" /> by the student community.
           </p>
           <div className="flex items-center gap-5">
             {['Privacy Policy', 'Terms of Use'].map(item => (

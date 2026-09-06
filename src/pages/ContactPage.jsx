@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
+import SEO from '@/components/ui/SEO';
 import { contactAPI } from '@/lib/api';
 import toast from 'react-hot-toast';
 
@@ -27,12 +28,18 @@ export default function ContactPage() {
 
   return (
     <div className="bg-background min-h-screen">
+      <SEO
+        title="Contact Nachiketa Awareness Society | Get in Touch"
+        description="Have a question, suggestion, or want to collaborate on awareness programs? Contact Nachiketa Awareness Society."
+        slug="/contact"
+      />
+
       <div className="border-b border-border bg-cream-50/50">
         <div className="container-lg section py-12">
           <FadeUp>
-            <p className="section-label">Get in touch</p>
+            <p className="section-label">GET IN TOUCH</p>
             <h1 className="section-title">Contact Us</h1>
-            <p className="section-subtitle">Have a question, suggestion, or want to collaborate? We would love to hear from you.</p>
+            <p className="section-subtitle">Have a question, suggestion, or want to collaborate on an awareness session? We would love to hear from you.</p>
           </FadeUp>
         </div>
       </div>
@@ -46,7 +53,7 @@ export default function ContactPage() {
                   {[
                     { icon: Mail, label: 'Email', value: 'hello@nachiketa.in', href: 'mailto:hello@nachiketa.in' },
                     { icon: Phone, label: 'Phone', value: '+91 98765 43210', href: 'tel:+919876543210' },
-                    { icon: MapPin, label: 'Address', value: 'Campus, Main Building, Room 101', href: null },
+                    { icon: MapPin, label: 'Address', value: 'Nachiketa Awareness Society, Student Activity Center', href: null },
                   ].map(({ icon: Icon, label, value, href }) => (
                     <div key={label} className="flex items-start gap-3">
                       <div className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0"><Icon size={16} className="text-indigo-500"/></div>
@@ -62,7 +69,7 @@ export default function ContactPage() {
             </FadeUp>
             <FadeUp delay={0.1}>
               <div className="card bg-gradient-to-br from-indigo-50 to-lavender-50 border-indigo-100">
-                <h3 className="font-bold text-text-primary mb-2">Office Hours</h3>
+                <h3 className="font-bold text-text-primary mb-2">Community Support Hours</h3>
                 <div className="space-y-1.5 text-sm text-text-secondary">
                   <div className="flex justify-between"><span>Monday - Friday</span><span className="font-medium">10AM - 5PM</span></div>
                   <div className="flex justify-between"><span>Saturday</span><span className="font-medium">11AM - 2PM</span></div>
@@ -107,7 +114,7 @@ export default function ContactPage() {
                     </div>
                     <div className="form-group !mb-0">
                       <label className="label">Message *</label>
-                      <textarea {...register('message',{required:'Message is required',minLength:{value:20,message:'Message too short'}})} rows={5} className={"input resize-none "+(errors.message?'input-error':'')} placeholder="Tell us more..."/>
+                      <textarea {...register('message',{required:'Message is required',minLength:{value:20,message:'Message too short'}})} rows={5} className={"input resize-none "+(errors.message?'input-error':'')} placeholder="How can we help or collaborate?"/>
                       {errors.message && <p className="form-error">{errors.message.message}</p>}
                     </div>
                     <button type="submit" disabled={isSubmitting} className="btn-primary w-full py-3 shadow-glow-indigo disabled:opacity-60 gap-2">

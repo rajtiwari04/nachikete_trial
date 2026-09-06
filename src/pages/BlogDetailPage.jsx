@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Clock, Calendar, User, BookOpen } from 'lucide-react';
+import SEO from '@/components/ui/SEO';
 import { blogsAPI } from '@/lib/api';
 import { format } from 'date-fns';
 
@@ -23,8 +24,38 @@ export default function BlogDetailPage() {
     </div>
   );
 
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: blog.title,
+    description: blog.excerpt,
+    image: blog.coverImage,
+    datePublished: blog.publishedAt,
+    author: {
+      '@type': 'Person',
+      name: blog.author?.name || 'Nachiketa Team',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Nachiketa Awareness Society',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${window.location.origin}/src/assets/nachiketa-logo.jpeg`,
+      },
+    },
+  };
+
   return (
     <div className="bg-background min-h-screen">
+      <SEO
+        title={`${blog.title} | Nachiketa Blog`}
+        description={blog.excerpt || `Read ${blog.title} on Nachiketa Awareness Society Blog.`}
+        image={blog.coverImage || 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80'}
+        type="article"
+        slug={`/blogs/${blog.slug}`}
+        schema={articleSchema}
+      />
+
       <div className="border-b border-border bg-cream-50/50 py-3">
         <div className="container-md px-4">
           <Link to="/blogs" className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-indigo-600 transition-colors">
