@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '@/lib/api';
+import SEO from '@/components/ui/SEO';
 
 export default function ResetPasswordPage() {
   const { token } = useParams();
@@ -26,6 +27,7 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
+      <SEO title="Reset Password | Nachiketa Awareness Society" noindex={true} />
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-[380px]">
         <h1 className="text-2xl font-bold text-text-primary mb-1">Set new password</h1>
         <p className="text-text-secondary text-sm mb-6">Choose a strong password for your account.</p>

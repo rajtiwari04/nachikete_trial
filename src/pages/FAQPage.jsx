@@ -65,12 +65,26 @@ function FAQItem({ faq, index }) {
 }
 
 export default function FAQPage() {
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQS.map(faq => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.a,
+      },
+    })),
+  };
+
   return (
     <div className="bg-background min-h-screen">
       <SEO
-        title="FAQ | Nachiketa Awareness Society"
-        description="Find answers to common questions about Nachiketa Awareness Society, membership, awareness programs, and student community initiatives."
+        title="Nachiketa FAQ | Questions About Our Student Community"
+        description="Frequently asked questions about Nachiketa Awareness Society, our awareness sessions, membership, activities, and community goals."
         slug="/faq"
+        schema={faqSchema}
       />
 
       <div className="border-b border-border bg-cream-50/50">

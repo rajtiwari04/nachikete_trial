@@ -131,8 +131,8 @@ export default function EventsPage() {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="Nachiketa Programs & Events | Student Awareness Sessions"
-        description="Awareness sessions, self-development programs, wellbeing initiatives, cultural activities and meaningful conversations organized by Nachiketa Awareness Society."
+        title="Nachiketa Events & Awareness Programs | Upcoming Sessions"
+        description="Explore upcoming and past student awareness sessions, self-development workshops, wellbeing bootcamps, and cultural activities by Nachiketa Awareness Society."
         slug="/events"
       />
 

@@ -8,7 +8,7 @@ export default function HeroSection({ galleryImages = [] }) {
   const heroImage = getHomepageCommunityImage(galleryImages, 0);
 
   return (
-    <section className="relative flex flex-col justify-center bg-background pt-36 sm:pt-40 md:pt-44 pb-16 md:pb-20 overflow-hidden">
+    <section className="relative flex flex-col justify-center bg-background pt-28 sm:pt-32 md:pt-36 pb-16 md:pb-20 overflow-hidden">
       {/* Soft warm ambient radial gradient lighting */}
       <div className="absolute inset-0 pointer-events-none opacity-50 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-amber-50/80 via-indigo-50/40 to-transparent" />
       

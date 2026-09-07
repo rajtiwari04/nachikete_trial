@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CheckCircle, XCircle, Loader } from 'lucide-react';
 import api from '@/lib/api';
+import SEO from '@/components/ui/SEO';
 
 export default function VerifyEmailPage() {
   const { token } = useParams();
@@ -16,6 +17,7 @@ export default function VerifyEmailPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
+      <SEO title="Verify Email | Nachiketa Awareness Society" noindex={true} />
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center max-w-sm">
         {status === 'loading' && (
           <>

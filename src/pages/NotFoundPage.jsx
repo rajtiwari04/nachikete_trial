@@ -1,11 +1,17 @@
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Home } from 'lucide-react';
+import SEO from '@/components/ui/SEO';
 
 export default function NotFoundPage() {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
+      <SEO
+        title="Page Not Found | Nachiketa Awareness Society"
+        description="The requested page could not be found."
+        noindex={true}
+      />
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="floating-orb w-96 h-96 -top-20 -left-20 bg-indigo-100 opacity-50"/>
         <div className="floating-orb w-64 h-64 bottom-10 right-10 bg-lavender-100 opacity-40"/>

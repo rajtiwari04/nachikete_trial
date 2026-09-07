@@ -79,6 +79,7 @@ export default function HomePage() {
       <SEO
         title="Nachiketa Awareness Society | Student Awareness, Growth & Community"
         description="Nachiketa Awareness Society is a student-led community focused on awareness, self-discovery, wellbeing, cultural activities and meaningful social participation."
+        slug="/"
       />
 
       {/* ─── 1. HERO SECTION ────────────────────────────────────────────────── */}

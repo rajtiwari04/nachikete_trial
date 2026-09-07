@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, Mail, Lock, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAuthStore from '@/store/authStore';
+import SEO from '@/components/ui/SEO';
 import Logo from '@/components/ui/Logo';
 
 const loginSchema = z.object({
@@ -37,6 +38,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background flex">
+      <SEO title="Sign In | Nachiketa Awareness Society" noindex={true} slug="/login" />
       {/* ─── Left panel ──────────────────────────────────────────────────────── */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-50 via-lavender-50 to-cream-100 relative overflow-hidden items-center justify-center">
         <div className="absolute inset-0 pointer-events-none">

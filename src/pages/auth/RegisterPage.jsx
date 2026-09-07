@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, User, Mail, Lock, Phone, GraduationCap, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
-import useAuthStore from '@/store/authStore';
+import SEO from '@/components/ui/SEO';
 import Logo from '@/components/ui/Logo';
 
 const schema = z.object({
@@ -57,6 +57,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-background flex">
+      <SEO title="Register | Nachiketa Awareness Society" noindex={true} slug="/register" />
       {/* ─── Left panel ────────────────────────────────────────────────────── */}
       <div className="hidden lg:flex lg:w-[42%] bg-gradient-to-br from-indigo-50 via-lavender-50 to-cream-100 relative overflow-hidden flex-col items-center justify-center p-12">
         <div className="absolute inset-0 pointer-events-none">

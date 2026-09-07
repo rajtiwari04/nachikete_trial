@@ -207,7 +207,7 @@ export default function TeamPage() {
     <div className="bg-background min-h-screen">
       <SEO
         title="Nachiketa Team | Student Community Leaders"
-        description="Meet the student leads, organizers, and faculty advisors behind Nachiketa Awareness Society."
+        description="Meet the student leaders, organizers, and members behind Nachiketa Awareness Society driving student growth and community engagement."
         slug="/team"
       />
 

@@ -51,8 +51,8 @@ export default function MembershipPage() {
   return (
     <div className="bg-background">
       <SEO
-        title="Membership | Nachiketa Awareness Society"
-        description="Join Nachiketa Awareness Society. Access awareness sessions, self-development resources, cultural activities, and member community benefits."
+        title="Join Nachiketa Awareness Society | Membership & Community"
+        description="Become a member of Nachiketa Awareness Society. Join a supportive student community focused on self-discovery, wellbeing, and positive social impact."
         slug="/membership"
       />
 

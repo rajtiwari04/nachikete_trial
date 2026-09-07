@@ -24,26 +24,38 @@ export default function BlogDetailPage() {
     </div>
   );
 
-  const articleSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: blog.title,
-    description: blog.excerpt,
-    image: blog.coverImage,
-    datePublished: blog.publishedAt,
-    author: {
-      '@type': 'Person',
-      name: blog.author?.name || 'Nachiketa Team',
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'Nachiketa Awareness Society',
-      logo: {
-        '@type': 'ImageObject',
-        url: `${window.location.origin}/src/assets/nachiketa-logo.jpeg`,
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const articleSchema = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: blog.title,
+      description: blog.excerpt,
+      image: blog.coverImage,
+      datePublished: blog.publishedAt,
+      author: {
+        '@type': 'Person',
+        name: blog.author?.name || 'Nachiketa Team',
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Nachiketa Awareness Society',
+        logo: {
+          '@type': 'ImageObject',
+          url: `${origin}/src/assets/nachiketa-logo.jpeg`,
+        },
       },
     },
-  };
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: origin || '/' },
+        { '@type': 'ListItem', position: 2, name: 'Blog', item: `${origin}/blogs` },
+        { '@type': 'ListItem', position: 3, name: blog.title, item: `${origin}/blogs/${blog.slug}` },
+      ],
+    },
+  ];
 
   return (
     <div className="bg-background min-h-screen">
@@ -57,10 +69,12 @@ export default function BlogDetailPage() {
       />
 
       <div className="border-b border-border bg-cream-50/50 py-3">
-        <div className="container-md px-4">
-          <Link to="/blogs" className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-indigo-600 transition-colors">
-            <ArrowLeft size={15}/> Back to articles
-          </Link>
+        <div className="container-md px-4 flex items-center gap-2 text-xs text-text-muted">
+          <Link to="/" className="hover:text-indigo-600 transition-colors">Home</Link>
+          <span>/</span>
+          <Link to="/blogs" className="hover:text-indigo-600 transition-colors">Blog</Link>
+          <span>/</span>
+          <span className="text-text-primary font-medium truncate max-w-[200px] sm:max-w-none">{blog.title}</span>
         </div>
       </div>
       {blog.coverImage && (

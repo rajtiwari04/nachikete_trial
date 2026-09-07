@@ -5,6 +5,7 @@ import { Calendar, CreditCard, User, CheckCircle, Clock, ArrowRight, Award, Zap 
 import useAuthStore from "@/store/authStore";
 import { usersAPI, paymentsAPI, membershipAPI } from "@/lib/api";
 import { format } from "date-fns";
+import SEO from "@/components/ui/SEO";
 
 const FadeUp = ({ children, delay=0, className="" }) => (
   <motion.div initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{duration:0.5,delay}} className={className}>{children}</motion.div>
@@ -25,6 +26,7 @@ export default function DashboardPage() {
 
   return (
     <div className="bg-background min-h-screen">
+      <SEO title="Dashboard | Nachiketa Awareness Society" noindex={true} slug="/dashboard" />
       <div className="border-b border-border bg-gradient-to-r from-indigo-50 to-lavender-50">
         <div className="container-lg px-4 py-8">
           <FadeUp className="flex items-center gap-4">

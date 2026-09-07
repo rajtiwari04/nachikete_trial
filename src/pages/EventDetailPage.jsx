@@ -150,30 +150,42 @@ export default function EventDetailPage() {
   const isUpcoming = event.status === 'upcoming';
   const isSoldOut  = event.isSoldOut;
 
-  const eventSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Event',
-    name: event.title,
-    description: event.shortDescription || event.description,
-    startDate: event.date,
-    eventStatus: 'https://schema.org/EventScheduled',
-    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    location: {
-      '@type': 'Place',
-      name: event.venue?.name || 'Nachiketa Campus',
-      address: event.venue?.address || 'Campus Venue',
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const eventSchema = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Event',
+      name: event.title,
+      description: event.shortDescription || event.description,
+      startDate: event.date,
+      eventStatus: 'https://schema.org/EventScheduled',
+      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+      location: {
+        '@type': 'Place',
+        name: event.venue?.name || 'Nachiketa Campus',
+        address: event.venue?.address || 'Campus Venue',
+      },
+      organizer: {
+        '@type': 'Organization',
+        name: 'Nachiketa Awareness Society',
+        url: origin,
+      },
     },
-    organizer: {
-      '@type': 'Organization',
-      name: 'Nachiketa Awareness Society',
-      url: window.location.origin,
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: origin || '/' },
+        { '@type': 'ListItem', position: 2, name: 'Events & Programs', item: `${origin}/events` },
+        { '@type': 'ListItem', position: 3, name: event.title, item: `${origin}/events/${event.slug}` },
+      ],
     },
-  };
+  ];
 
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title={`${event.title} | Nachiketa Awareness Society`}
+        title={`${event.title} | Nachiketa Awareness Session`}
         description={event.shortDescription || event.description || 'Join this awareness and community program organized by Nachiketa Awareness Society.'}
         image={event.banner || 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80'}
         type="event"
@@ -181,12 +193,14 @@ export default function EventDetailPage() {
         schema={eventSchema}
       />
 
-      {/* ─── Back nav ──────────────────────────────────────────────────────── */}
+      {/* ─── Breadcrumb nav ─────────────────────────────────────────────────── */}
       <div className="border-b border-border bg-cream-50/50 py-3">
-        <div className="container-lg px-4">
-          <Link to="/events" className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-indigo-600 transition-colors">
-            <ArrowLeft size={15} /> Back to programs
-          </Link>
+        <div className="container-lg px-4 flex items-center gap-2 text-xs text-text-muted">
+          <Link to="/" className="hover:text-indigo-600 transition-colors">Home</Link>
+          <span>/</span>
+          <Link to="/events" className="hover:text-indigo-600 transition-colors">Programs</Link>
+          <span>/</span>
+          <span className="text-text-primary font-medium truncate max-w-[200px] sm:max-w-none">{event.title}</span>
         </div>
       </div>
 

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '@/lib/api';
+import SEO from '@/components/ui/SEO';
 
 export default function ForgotPasswordPage() {
   const [sent, setSent] = useState(false);
@@ -23,6 +24,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
+      <SEO title="Forgot Password | Nachiketa Awareness Society" noindex={true} slug="/forgot-password" />
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-[380px]">
         <Link to="/login" className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-text-secondary mb-8 transition-colors">
           <ArrowLeft size={14} /> Back to sign in

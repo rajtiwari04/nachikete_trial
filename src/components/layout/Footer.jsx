@@ -114,12 +114,10 @@ export default function Footer() {
         {/* ─── Bottom bar ──────────────────────────────────────────────────── */}
         <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-text-muted flex items-center gap-1">
-            © {new Date().getFullYear()} Nachiketa Awareness Society. Made with <Heart size={12} className="text-rose-400 fill-rose-400" /> by the student community.
+            © {new Date().getFullYear()} Nachiketa Awareness Society.
           </p>
           <div className="flex items-center gap-5">
-            {['Privacy Policy', 'Terms of Use'].map(item => (
-              <a key={item} href="#" className="text-xs text-text-muted hover:text-text-secondary transition-colors">{item}</a>
-            ))}
+
           </div>
         </div>
       </div>

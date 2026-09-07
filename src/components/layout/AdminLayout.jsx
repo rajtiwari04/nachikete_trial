@@ -9,6 +9,7 @@ import {
 import useAuthStore from '@/store/authStore';
 import toast from 'react-hot-toast';
 import Logo from '@/components/ui/Logo';
+import SEO from '@/components/ui/SEO';
 
 const ADMIN_NAV = [
   { label: 'Dashboard',    href: '/admin/dashboard',    icon: LayoutDashboard },
@@ -100,6 +101,7 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-cream-50 flex">
+      <SEO title="Admin Panel | Nachiketa Awareness Society" noindex={true} />
       {/* Desktop Sidebar */}
       <aside className={`hidden lg:flex flex-col flex-shrink-0 bg-surface border-r border-border transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-16'}`}>
         <SidebarContent />

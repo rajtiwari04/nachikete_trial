@@ -1,9 +1,9 @@
 /**
- * Centralized Image Selection Logic for Nachiketa Awareness Society
+ * Centralized Image Selection & Optimization Logic for Nachiketa Awareness Society
  * 
  * Priority:
  * 1. Valid real image from Gallery data (if available and non-empty)
- * 2. Unsplash fallback relevant to student awareness, community, wellbeing, and culture
+ * 2. Curated Unsplash fallback relevant to student awareness, community, wellbeing, and culture
  * 
  * Handles null/undefined, missing URLs, empty arrays, and invalid records safely.
  */
@@ -82,4 +82,11 @@ export function getHomepageCommunityImage(galleryImages = [], index = 0, customF
   
   const defaultFallback = FALLBACK_COMMUNITY_IMAGES[index % FALLBACK_COMMUNITY_IMAGES.length];
   return customFallback || defaultFallback;
+}
+
+/**
+ * Conceptually required centralized getHomepageImage function
+ */
+export function getHomepageImage(galleryImages = [], index = 0) {
+  return getHomepageCommunityImage(galleryImages, index);
 }
