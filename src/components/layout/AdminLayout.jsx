@@ -25,8 +25,8 @@ const ADMIN_NAV = [
 ];
 
 export default function AdminLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);           // desktop collapse/expand ONLY
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false); // mobile drawer open/close ONLY
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
 
@@ -36,11 +36,13 @@ export default function AdminLayout() {
     navigate('/login');
   };
 
-  const SidebarContent = () => (
+  // `expanded` now comes from the caller instead of being read from closure,
+  // so desktop and mobile can independently control label visibility.
+  const SidebarContent = ({ expanded }) => (
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="flex items-center p-5 border-b border-border">
-        <Logo size="sm" showText={sidebarOpen} coloredText={false} subtext="Admin Panel" textClassName="text-base" />
+        <Logo size="sm" showText={expanded} coloredText={false} subtext="Admin Panel" textClassName="text-base" />
       </div>
 
       {/* Nav */}
@@ -60,8 +62,8 @@ export default function AdminLayout() {
             {({ isActive }) => (
               <>
                 <Icon size={16} className={`flex-shrink-0 ${isActive ? 'text-indigo-500' : 'text-text-muted group-hover:text-text-secondary'}`} />
-                {sidebarOpen && <span className="truncate">{label}</span>}
-                {sidebarOpen && isActive && <ChevronRight size={12} className="ml-auto text-indigo-400" />}
+                {expanded && <span className="truncate">{label}</span>}
+                {expanded && isActive && <ChevronRight size={12} className="ml-auto text-indigo-400" />}
               </>
             )}
           </NavLink>
@@ -73,17 +75,17 @@ export default function AdminLayout() {
         <Link to="/" target="_blank"
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-text-secondary hover:bg-cream-50 hover:text-text-primary transition-colors">
           <ExternalLink size={16} className="text-text-muted flex-shrink-0" />
-          {sidebarOpen && 'View Site'}
+          {expanded && 'View Site'}
         </Link>
         <button onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-rose-600 hover:bg-rose-50 transition-colors">
           <LogOut size={16} className="flex-shrink-0" />
-          {sidebarOpen && 'Sign out'}
+          {expanded && 'Sign out'}
         </button>
       </div>
 
       {/* User info */}
-      {sidebarOpen && (
+      {expanded && (
         <div className="p-3 pt-0">
           <div className="flex items-center gap-3 p-3 bg-cream-50 rounded-xl border border-border">
             <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-lavender-400 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
@@ -102,12 +104,12 @@ export default function AdminLayout() {
   return (
     <div className="min-h-screen bg-cream-50 flex">
       <SEO title="Admin Panel | Nachiketa Awareness Society" noindex={true} />
-      {/* Desktop Sidebar */}
+      {/* Desktop Sidebar — expanded state driven by desktop collapse toggle */}
       <aside className={`hidden lg:flex flex-col flex-shrink-0 bg-surface border-r border-border transition-all duration-300 ${sidebarOpen ? 'w-60' : 'w-16'}`}>
-        <SidebarContent />
+        <SidebarContent expanded={sidebarOpen} />
       </aside>
 
-      {/* Mobile Sidebar */}
+      {/* Mobile Sidebar — ALWAYS expanded, independent of desktop state */}
       <AnimatePresence>
         {mobileSidebarOpen && (
           <>
@@ -119,7 +121,7 @@ export default function AdminLayout() {
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               className="lg:hidden fixed left-0 top-0 bottom-0 w-64 bg-surface border-r border-border z-50 flex flex-col"
             >
-              <SidebarContent />
+              <SidebarContent expanded={true} />
             </motion.aside>
           </>
         )}
@@ -130,8 +132,19 @@ export default function AdminLayout() {
         {/* Top bar */}
         <header className="h-14 bg-surface border-b border-border flex items-center justify-between px-4 lg:px-6 flex-shrink-0 sticky top-0 z-30">
           <div className="flex items-center gap-3">
-            <button onClick={() => { setSidebarOpen(o => !o); setMobileSidebarOpen(o => !o); }}
-              className="p-1.5 rounded-lg hover:bg-cream-100 transition-colors">
+            <button
+              onClick={() => {
+                // Only one of these two <aside> elements is ever visible for a given
+                // viewport (Tailwind lg: breakpoint), so this single button remains
+                // safe to toggle both — but SidebarContent no longer trusts sidebarOpen
+                // for mobile, so this no longer leaks into the drawer's appearance.
+                setSidebarOpen((o) => !o);
+                setMobileSidebarOpen((o) => !o);
+              }}
+              className="p-1.5 rounded-lg hover:bg-cream-100 transition-colors"
+              aria-label={mobileSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+              aria-expanded={mobileSidebarOpen}
+            >
               <Menu size={18} className="text-text-secondary" />
             </button>
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-cream-50 border border-border rounded-lg text-sm text-text-muted w-56">
