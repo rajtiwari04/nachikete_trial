@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Linkedin, Instagram, Mail } from 'lucide-react';
+import { Linkedin } from 'lucide-react';
 import SEO from '@/components/ui/SEO';
 import { teamAPI } from '@/lib/api';
 
@@ -17,24 +16,44 @@ const FadeUp = ({ children, delay = 0, className = '' }) => (
   </motion.div>
 );
 
-const DEPT_LABELS = {
-  core:       'Core Leadership',
-  technical:  'Technical & Web',
-  creative:   'Creative & Content',
-  marketing:  'Outreach & Media',
-  management: 'Program Management',
-  advisor:    'Faculty Advisors',
+const SECTION_ORDER = ['leadership', 'core-team'];
+
+const SECTION_CONFIG = {
+  'leadership': {
+    title: 'Leadership',
+    description: 'Guiding the vision, strategic direction, and executive management of Nachiketa.',
+    badgeStyle: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+  },
+  'core-team': {
+    title: 'Core Team',
+    description: 'The dedicated leads and specialists driving research, policy, outreach, media, and creative initiatives.',
+    badgeStyle: 'bg-sage-100 text-sage-800 border-sage-200',
+  },
 };
 
-const DEPT_ORDER = ['core', 'technical', 'creative', 'marketing', 'management', 'advisor'];
+const DIVISION_ORDER = {
+  'leadership': ['president', 'management'],
+  'core-team': [
+    'research-policy',
+    'outreach',
+    'media-communications',
+    'research',
+    'writing',
+    'social-media',
+    'photography',
+  ],
+};
 
-const DEPT_COLORS = {
-  core:       'bg-indigo-50 text-indigo-700 border-indigo-100',
-  technical:  'bg-lavender-50 text-lavender-700 border-lavender-100',
-  creative:   'bg-rose-50 text-rose-700 border-rose-100',
-  marketing:  'bg-amber-50 text-amber-700 border-amber-100',
-  management: 'bg-sage-50 text-sage-700 border-sage-100',
-  advisor:    'bg-cream-100 text-text-secondary border-cream-300',
+const DIVISION_CONFIG = {
+  'president': { title: 'President' },
+  'management': { title: 'Management' },
+  'research-policy': { title: 'Research & Policy' },
+  'outreach': { title: 'Outreach' },
+  'media-communications': { title: 'Media & Communications' },
+  'research': { title: 'Research' },
+  'writing': { title: 'Writing' },
+  'social-media': { title: 'Social Media' },
+  'photography': { title: 'Photography' },
 };
 
 const AVATAR_GRADIENTS = [
@@ -47,30 +66,30 @@ const AVATAR_GRADIENTS = [
 ];
 
 function MemberCard({ member, delay }) {
-  const initials = member.name
+  const name = member.name || 'Team Member';
+  const position = member.position || member.designation || 'Member';
+  const photo = member.photo || member.avatar;
+  const linkedin = member.linkedin || member.socialLinks?.linkedin;
+
+  const initials = name
     .split(' ')
     .map(n => n[0])
     .join('')
     .slice(0, 2)
     .toUpperCase();
 
-  const grad = AVATAR_GRADIENTS[member.name.charCodeAt(0) % AVATAR_GRADIENTS.length];
-
-  const hasLinkedin  = member.socialLinks?.linkedin;
-  const hasInstagram = member.socialLinks?.instagram;
-  const hasEmail     = member.email;
-  const hasSocials   = hasLinkedin || hasInstagram || hasEmail;
+  const grad = AVATAR_GRADIENTS[name.charCodeAt(0) % AVATAR_GRADIENTS.length];
 
   return (
     <FadeUp delay={delay}>
       <div className="card hover:shadow-soft-md transition-all duration-300 group text-center p-6 flex flex-col h-full">
 
-        {/* ── Avatar ──────────────────────────────────────────────────── */}
+        {/* ── Photo / Avatar ──────────────────────────────────────────── */}
         <div className="relative mx-auto mb-4 w-20 h-20 flex-shrink-0">
-          {member.avatar ? (
+          {photo ? (
             <img
-              src={member.avatar}
-              alt={`${member.name} - ${member.designation} at Nachiketa Awareness Society`}
+              src={photo}
+              alt={`${name} - ${position} at Nachiketa`}
               className="w-20 h-20 rounded-2xl object-cover shadow-soft"
             />
           ) : (
@@ -78,92 +97,45 @@ function MemberCard({ member, delay }) {
               <span className="text-white font-bold text-xl">{initials}</span>
             </div>
           )}
-          {/* Star badge for core team */}
-          {member.department === 'core' && (
+          {member.section === 'leadership' && (
             <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-indigo-500 rounded-full flex items-center justify-center shadow-soft-sm">
               <span className="text-white text-2xs font-bold">★</span>
             </div>
           )}
         </div>
 
-        {/* ── Name & designation ──────────────────────────────────────── */}
+        {/* ── Name & Position ─────────────────────────────────────────── */}
         <h3 className="font-bold text-text-primary text-base mb-0.5 leading-snug">
-          {member.name}
+          {name}
         </h3>
         <p className="text-sm text-indigo-600 font-semibold mb-2">
-          {member.designation}
+          {position}
         </p>
 
-        {/* ── Year & branch ───────────────────────────────────────────── */}
-        {(member.year || member.branch) && (
-          <p className="text-xs text-text-muted mb-3">
-            {[member.year, member.branch].filter(Boolean).join(' · ')}
-          </p>
-        )}
-
-        {/* ── Bio ─────────────────────────────────────────────────────── */}
+        {/* ── Short Bio ────────────────────────────────────────────────── */}
         {member.bio && (
           <p className="text-xs text-text-secondary leading-relaxed mb-4 line-clamp-3 flex-1">
             {member.bio}
           </p>
         )}
 
-        {/* ── Social links ────────────────────────────────────────────── */}
-        {hasSocials && (
-          <div className="flex items-center justify-center gap-2.5 mt-auto pt-4 border-t border-border">
-
-            {/* LinkedIn */}
-            {hasLinkedin ? (
-              <a
-                href={member.socialLinks.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={`${member.name} on LinkedIn`}
-                className="w-8 h-8 rounded-xl bg-cream-50 hover:bg-[#0077B5]/10 hover:border-[#0077B5]/30 flex items-center justify-center text-text-muted hover:text-[#0077B5] transition-all duration-200 border border-border shadow-soft-xs"
-              >
-                <Linkedin size={15} />
-              </a>
-            ) : (
-              <div className="w-8 h-8 rounded-xl bg-cream-50 border border-dashed border-cream-300 flex items-center justify-center">
-                <Linkedin size={13} className="text-cream-400" />
-              </div>
-            )}
-
-            {/* Instagram */}
-            {hasInstagram ? (
-              <a
-                href={member.socialLinks.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={`${member.name} on Instagram`}
-                className="w-8 h-8 rounded-xl bg-cream-50 hover:bg-gradient-to-br hover:from-[#f09433]/10 hover:to-[#bc1888]/10 hover:border-[#bc1888]/30 flex items-center justify-center text-text-muted hover:text-[#c13584] transition-all duration-200 border border-border shadow-soft-xs"
-              >
-                <Instagram size={15} />
-              </a>
-            ) : (
-              <div className="w-8 h-8 rounded-xl bg-cream-50 border border-dashed border-cream-300 flex items-center justify-center">
-                <Instagram size={13} className="text-cream-400" />
-              </div>
-            )}
-
-            {/* Email */}
-            {hasEmail && (
-              <a
-                href={`mailto:${member.email}`}
-                title={`Email ${member.name}`}
-                className="w-8 h-8 rounded-xl bg-cream-50 hover:bg-indigo-50 hover:border-indigo-200 flex items-center justify-center text-text-muted hover:text-indigo-600 transition-all duration-200 border border-border shadow-soft-xs"
-              >
-                <Mail size={14} />
-              </a>
-            )}
-          </div>
-        )}
-
-        {!hasSocials && (
-          <div className="mt-auto pt-4 border-t border-border">
-            <p className="text-2xs text-text-muted italic">Member Lead</p>
-          </div>
-        )}
+        {/* ── LinkedIn Link ────────────────────────────────────────────── */}
+        <div className="mt-auto pt-4 border-t border-border flex items-center justify-center">
+          {linkedin ? (
+            <a
+              href={linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={`${name} on LinkedIn`}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cream-50 hover:bg-[#0077B5]/10 hover:border-[#0077B5]/30 text-text-muted hover:text-[#0077B5] transition-all duration-200 border border-border shadow-soft-xs text-xs font-medium"
+            >
+              <Linkedin size={14} className="text-[#0077B5]" />
+              <span>LinkedIn</span>
+            </a>
+          ) : (
+            <span className="text-2xs text-text-muted italic">Nachiketa Member</span>
+          )}
+        </div>
       </div>
     </FadeUp>
   );
@@ -182,8 +154,6 @@ function SkeletonCard() {
 }
 
 export default function TeamPage() {
-  const [activeDept, setActiveDept] = useState('all');
-
   const { data, isLoading } = useQuery({
     queryKey: ['team'],
     queryFn: () => teamAPI.getAll(),
@@ -192,60 +162,54 @@ export default function TeamPage() {
 
   const members = data?.data?.members || [];
 
-  const presentDepts = DEPT_ORDER.filter(d => members.some(m => m.department === d));
-  const departments  = ['all', ...presentDepts];
+  // Group members into hierarchical structure: section -> division -> members
+  const groupedHierarchy = SECTION_ORDER.reduce((acc, secKey) => {
+    const secDivisions = DIVISION_ORDER[secKey] || [];
+    const divisionMap = {};
+    let totalSecMembers = 0;
 
-  const grouped = DEPT_ORDER.reduce((acc, dept) => {
-    const filtered = members.filter(
-      m => m.department === dept && (activeDept === 'all' || activeDept === dept)
-    );
-    if (filtered.length > 0) acc[dept] = filtered;
+    secDivisions.forEach(divKey => {
+      const divMembers = members.filter(m => {
+        const memberSec = m.section || (m.department === 'core' || m.department === 'management' ? 'leadership' : 'core-team');
+        const memberDiv = m.division || 'management';
+        return memberSec === secKey && memberDiv === divKey;
+      });
+
+      if (divMembers.length > 0) {
+        divMembers.sort((a, b) => (a.order || 0) - (b.order || 0));
+        divisionMap[divKey] = divMembers;
+        totalSecMembers += divMembers.length;
+      }
+    });
+
+    if (totalSecMembers > 0) {
+      acc[secKey] = divisionMap;
+    }
     return acc;
   }, {});
 
   return (
     <div className="bg-background min-h-screen">
       <SEO
-        title="Nachiketa Team | Student Community Leaders"
-        description="Meet the student leaders, organizers, and members behind Nachiketa Awareness Society driving student growth and community engagement."
+        title="The People Behind Nachiketa | Student Community Leaders"
+        description="Meet the leadership and core team members behind Nachiketa Awareness Society driving student growth and community engagement."
         slug="/team"
       />
 
-      {/* ── Page header ───────────────────────────────────────────────── */}
+      {/* ── Page Header ───────────────────────────────────────────────── */}
       <div className="border-b border-border bg-gradient-to-br from-indigo-50 via-cream-50 to-lavender-50">
         <div className="container-lg section py-16">
           <FadeUp className="max-w-2xl">
             <p className="section-label">OUR TEAM</p>
-            <h1 className="section-title">Meet our Team</h1>
+            <h1 className="section-title">The People Behind Nachiketa</h1>
             <p className="section-subtitle">
-              The passionate minds behind Nachiketa — students dedicated to building an aware, informed, healthy, and empowered community.
+              The dedicated leaders, researchers, writers, and creators driving awareness, community engagement, and student growth.
             </p>
           </FadeUp>
         </div>
       </div>
 
       <div className="container-lg section">
-
-        {/* ── Department filter pills ────────────────────────────────── */}
-        {departments.length > 2 && (
-          <div className="flex gap-2 flex-wrap mb-10">
-            {departments.map(dept => (
-              <button
-                key={dept}
-                onClick={() => setActiveDept(dept)}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 ${
-                  activeDept === dept
-                    ? 'bg-indigo-500 text-white border-indigo-500 shadow-soft-sm'
-                    : 'bg-surface border-border text-text-secondary hover:border-indigo-200 hover:text-indigo-600'
-                }`}
-              >
-                {dept === 'all' ? 'All Members' : DEPT_LABELS[dept] || dept}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* ── Members grid ──────────────────────────────────────────── */}
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
             {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
@@ -255,42 +219,79 @@ export default function TeamPage() {
             <p className="text-text-muted">No team members found.</p>
           </div>
         ) : (
-          <div className="space-y-14">
-            {Object.entries(grouped).map(([dept, deptMembers]) => (
-              <div key={dept}>
+          <div className="space-y-16">
+            {SECTION_ORDER.map(secKey => {
+              const divisionMap = groupedHierarchy[secKey];
+              if (!divisionMap) return null;
+              const secConfig = SECTION_CONFIG[secKey];
+              const secDivisions = DIVISION_ORDER[secKey];
 
-                {/* Department heading */}
-                <FadeUp>
-                  <div className="flex items-center gap-3 mb-6">
-                    <span className={`badge border text-sm px-3 py-1 ${DEPT_COLORS[dept] || ''}`}>
-                      {DEPT_LABELS[dept] || dept}
-                    </span>
-                    <div className="flex-1 h-px bg-border" />
-                    <span className="text-xs text-text-muted">
-                      {deptMembers.length} {deptMembers.length === 1 ? 'member' : 'members'}
-                    </span>
+              return (
+                <div key={secKey} className="space-y-10">
+
+                  {/* ── Top-Level Section Header ──────────────────────────── */}
+                  <FadeUp>
+                    <div className="border-b border-border/80 pb-4">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h2 className="text-2xl sm:text-3xl font-extrabold text-text-primary tracking-tight">
+                          {secConfig.title}
+                        </h2>
+                        <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold border ${secConfig.badgeStyle}`}>
+                          {secConfig.title}
+                        </span>
+                      </div>
+                      <p className="text-sm text-text-secondary">
+                        {secConfig.description}
+                      </p>
+                    </div>
+                  </FadeUp>
+
+                  {/* ── Division Subsections ──────────────────────────────── */}
+                  <div className="space-y-10 pl-0 sm:pl-3">
+                    {secDivisions.map(divKey => {
+                      const divMembers = divisionMap[divKey];
+                      if (!divMembers || divMembers.length === 0) return null;
+                      const divConfig = DIVISION_CONFIG[divKey];
+
+                      return (
+                        <div key={divKey} className="space-y-4">
+                          {/* Division Heading */}
+                          <FadeUp>
+                            <div className="flex items-center gap-3">
+                              <h3 className="text-lg font-bold text-indigo-950 flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-indigo-500 inline-block" />
+                                {divConfig.title}
+                              </h3>
+                              <div className="flex-1 h-px bg-border/60" />
+                              <span className="text-xs text-text-muted font-medium">
+                                {divMembers.length} {divMembers.length === 1 ? 'member' : 'members'}
+                              </span>
+                            </div>
+                          </FadeUp>
+
+                          {/* Member Cards Grid */}
+                          <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                            {divMembers.map((member, i) => (
+                              <MemberCard key={member._id || i} member={member} delay={i * 0.05} />
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                </FadeUp>
-
-                {/* Cards */}
-                <div className="grid gap-5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-                  {deptMembers.map((member, i) => (
-                    <MemberCard key={member._id} member={member} delay={i * 0.06} />
-                  ))}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
-        {/* ── Footer note ───────────────────────────────────────────── */}
+        {/* ── Footer Note ─────────────────────────────────────────────── */}
         {members.length > 0 && (
           <FadeUp delay={0.2} className="mt-16 text-center">
             <div className="inline-flex items-center gap-2 px-5 py-3 bg-cream-50 rounded-full border border-border">
-              <Linkedin size={14} className="text-[#0077B5]" />
-              <Instagram size={14} className="text-[#c13584]" />
-              <span className="text-sm text-text-secondary ml-1">
-                Connect with our team members on LinkedIn & Instagram
+              <Linkedin size={15} className="text-[#0077B5]" />
+              <span className="text-sm text-text-secondary">
+                Connect with our team members on LinkedIn
               </span>
             </div>
           </FadeUp>
