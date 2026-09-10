@@ -23,9 +23,21 @@ function EventModal({ event, onClose }) {
     defaultValues: event ? {
       ...event,
       date: event.date ? format(new Date(event.date), "yyyy-MM-dd'T'HH:mm") : '',
-      'venue.name': event.venue?.name || '',
-      'venue.address': event.venue?.address || '',
-    } : { category: 'workshop', status: 'draft', isPaid: false, certificateProvided: false },
+      venue: {
+        name: event.venue?.name || '',
+        address: event.venue?.address || '',
+      },
+    } : {
+      category: 'workshop',
+      status: 'draft',
+      isPaid: false,
+      isFeatured: false,
+      certificateProvided: false,
+      venue: {
+        name: '',
+        address: '',
+      },
+    },
   });
 
   const handleBannerUpload = async (e) => {
@@ -41,15 +53,26 @@ function EventModal({ event, onClose }) {
   };
 
   const onSubmit = async (data) => {
+    const venueName = data.venue?.name || data['venue.name'] || data.venueName || '';
+    const venueAddress = data.venue?.address || data['venue.address'] || data.venueAddress || '';
+
     const payload = {
       ...data,
       banner: bannerUrl,
-      venue: { name: data['venue.name'], address: data['venue.address'] },
+      venue: {
+        name: venueName,
+        address: venueAddress,
+      },
       price: Number(data.price) || 0,
       memberPrice: Number(data.memberPrice) || 0,
       maxSeats: data.maxSeats ? Number(data.maxSeats) : null,
+      isPaid: Boolean(data.isPaid),
+      isFeatured: Boolean(data.isFeatured),
+      certificateProvided: Boolean(data.certificateProvided),
     };
-    delete payload['venue.name']; delete payload['venue.address'];
+
+    delete payload['venue.name'];
+    delete payload['venue.address'];
 
     try {
       if (isEdit) {
@@ -60,6 +83,7 @@ function EventModal({ event, onClose }) {
         toast.success('Event created');
       }
       qc.invalidateQueries(['admin-events']);
+      qc.invalidateQueries(['events']);
       onClose();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to save event');
@@ -148,7 +172,14 @@ function EventModal({ event, onClose }) {
           <div className="grid grid-cols-2 gap-4">
             <div className="form-group !mb-0">
               <label className="label">Venue Name *</label>
-              <input {...register('venue.name', { required: 'Venue is required' })} className="input" placeholder="LHC Auditorium" />
+              <input
+                {...register('venue.name', { required: 'Venue is required' })}
+                className={`input ${(errors.venue?.name || errors['venue.name']) ? 'input-error' : ''}`}
+                placeholder="LHC Auditorium"
+              />
+              {(errors.venue?.name || errors['venue.name']) && (
+                <p className="form-error">{(errors.venue?.name || errors['venue.name']).message}</p>
+              )}
             </div>
             <div className="form-group !mb-0">
               <label className="label">Venue Address</label>
