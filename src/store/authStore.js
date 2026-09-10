@@ -9,6 +9,10 @@ const useAuthStore = create(
       token: null,
       isLoading: false,
       isAuthenticated: false,
+      // Tracks whether zustand-persist has finished reading localStorage.
+      // Until this is true we don't actually know if the user is logged in
+      // or not — ProtectedRoute must treat this as "unknown", not "logged out".
+      hasHydrated: false,
 
       setUser: (user) => set({ user, isAuthenticated: !!user }),
       setToken: (token) => {
@@ -69,7 +73,24 @@ const useAuthStore = create(
     {
       name: 'nachiketa-auth',
       storage: createJSONStorage(() => localStorage),
+      // NOTE: isAuthenticated is intentionally NOT persisted. It's a derived
+      // flag re-computed on rehydration below (see onRehydrateStorage) rather
+      // than trusted blindly from storage.
       partialize: (state) => ({ token: state.token, user: state.user }),
+
+      // Runs once, right after localStorage has been read back into the
+      // store on app startup. This is the ONLY correct place to flip
+      // isAuthenticated based on restored data, and to mark hydration done
+      // so route guards know it's safe to make a redirect decision.
+      onRehydrateStorage: () => (state, error) => {
+        if (state?.token) {
+          api.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
+        }
+        useAuthStore.setState({
+          isAuthenticated: !!(state?.token && state?.user),
+          hasHydrated: true,
+        });
+      },
     }
   )
 );
