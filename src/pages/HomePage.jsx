@@ -156,7 +156,7 @@ export default function HomePage() {
               
               <div className="space-y-4 text-sm sm:text-base text-text-secondary leading-relaxed font-normal">
                 <p className="font-medium text-indigo-950 text-base sm:text-lg italic border-l-2 border-indigo-500 pl-4 py-1">
-                  “Have you ever thought, ‘I wish I had known this earlier’?”
+                  "Have you ever thought, 'I wish I had known this earlier'?"
                 </p>
                 <p>
                   Many important things in life are not difficult to understand—we simply do not know about them at the right time. From our rights and responsibilities to health, wellbeing, welfare schemes, opportunities and personal growth, awareness can change the decisions we make and the lives we influence.
@@ -820,101 +820,27 @@ export default function HomePage() {
             </FadeUp>
           </div>
 
-          {/* Balanced Editorial Gallery Grid */}
+          {/* Clean 2x2 Square Gallery Grid */}
           {galleryList.length >= 4 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-5 items-stretch">
-              
-              {/* Left / Primary Featured Image (Item 0) ~58% width on Desktop */}
-              <FadeUp className="sm:col-span-2 lg:col-span-7 h-full">
-                <div className="group relative rounded-2xl overflow-hidden border border-border/80 bg-surface h-full min-h-[300px] sm:min-h-[360px] lg:min-h-[460px] shadow-soft-xs">
-                  <img
-                    src={galleryList[0].url}
-                    alt={galleryList[0].alt}
-                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-                    loading="lazy"
-                  />
-                  {/* Subtle Ambient Bottom Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300" />
-                  
-                  {/* Permanent Subtle Featured Badge Overlay */}
-                  <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white text-xs font-medium shadow-sm max-w-full">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-                      <span className="font-bold tracking-wider uppercase text-2xs text-indigo-200 shrink-0">COMMUNITY MOMENTS</span>
-                      <span className="text-white/30 hidden sm:inline">•</span>
-                      <span className="truncate text-white/90 hidden sm:inline">{galleryList[0].title}</span>
-                    </div>
-                    <span className="text-2xs text-white/70 bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10 self-start sm:self-auto hidden md:inline-block">
-                      {galleryList[0].cat}
-                    </span>
-                  </div>
-                </div>
-              </FadeUp>
-
-              {/* Right Composition ~42% width on Desktop */}
-              <div className="sm:col-span-2 lg:col-span-5 flex flex-col gap-4 sm:gap-5 h-full">
-                
-                {/* Top Secondary Image (Item 1) */}
-                <FadeUp delay={0.08} className="flex-1 min-h-[180px] sm:min-h-[200px] lg:min-h-[215px]">
-                  <div className="group relative rounded-2xl overflow-hidden border border-border/80 bg-surface h-full shadow-soft-xs">
+            <div className="grid grid-cols-2 gap-4 sm:gap-5">
+              {galleryList.slice(0, 4).map((item, index) => (
+                <FadeUp key={item.id} delay={index * 0.08}>
+                  <div className="group relative aspect-square overflow-hidden rounded-2xl border border-border/80 bg-surface shadow-soft-xs">
                     <img
-                      src={galleryList[1].url}
-                      alt={galleryList[1].alt}
+                      src={item.url}
+                      alt={item.alt}
                       className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 text-white">
-                      <span className="text-2xs font-semibold uppercase tracking-widest text-indigo-200 mb-0.5">
-                        {galleryList[1].cat}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 sm:p-4 text-white">
+                      <span className="text-2xs font-semibold uppercase tracking-widest text-indigo-200 mb-0.5 truncate">
+                        {item.cat}
                       </span>
-                      <p className="text-xs font-semibold truncate">{galleryList[1].title}</p>
+                      <p className="text-xs font-semibold truncate">{item.title}</p>
                     </div>
                   </div>
                 </FadeUp>
-
-                {/* Bottom Row: 2 Secondary Images Side-by-Side (Items 2 & 3) */}
-                <div className="grid grid-cols-2 gap-4 sm:gap-5 h-[160px] sm:h-[180px] lg:h-[225px]">
-                  
-                  {/* Image 2 */}
-                  <FadeUp delay={0.16} className="h-full">
-                    <div className="group relative rounded-2xl overflow-hidden border border-border/80 bg-surface h-full shadow-soft-xs">
-                      <img
-                        src={galleryList[2].url}
-                        alt={galleryList[2].alt}
-                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3.5 text-white">
-                        <span className="text-2xs font-semibold uppercase tracking-widest text-indigo-200 mb-0.5">
-                          {galleryList[2].cat}
-                        </span>
-                        <p className="text-xs font-semibold truncate">{galleryList[2].title}</p>
-                      </div>
-                    </div>
-                  </FadeUp>
-
-                  {/* Image 3 */}
-                  <FadeUp delay={0.24} className="h-full">
-                    <div className="group relative rounded-2xl overflow-hidden border border-border/80 bg-surface h-full shadow-soft-xs">
-                      <img
-                        src={galleryList[3].url}
-                        alt={galleryList[3].alt}
-                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3.5 text-white">
-                        <span className="text-2xs font-semibold uppercase tracking-widest text-indigo-200 mb-0.5">
-                          {galleryList[3].cat}
-                        </span>
-                        <p className="text-xs font-semibold truncate">{galleryList[3].title}</p>
-                      </div>
-                    </div>
-                  </FadeUp>
-
-                </div>
-
-              </div>
-
+              ))}
             </div>
           )}
 

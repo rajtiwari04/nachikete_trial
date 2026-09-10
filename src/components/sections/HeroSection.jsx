@@ -83,17 +83,17 @@ export default function HeroSection({ galleryImages = [] }) {
                 <img
                   src={heroImage.url}
                   alt={heroImage.alt}
-                  className="w-full h-[340px] sm:h-[400px] object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-[340px] sm:h-[400px] object-cover object-top group-hover:scale-105 transition-transform duration-700"
                   loading="eager"
                 />
                 
-                {/* Image Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent flex flex-col justify-end p-6 sm:p-8 text-white">
+                {/* Image Gradient Overlay (top-anchored, for quote readability) */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-transparent flex flex-col justify-start p-6 sm:p-8 pt-6 sm:pt-8 pr-16 sm:pr-8 text-white">
                   <span className="text-2xs uppercase tracking-widest text-white/80 font-semibold mb-1">
                     Student Awareness & Community
                   </span>
-                  <p className="text-lg sm:text-xl font-bold leading-snug text-balance">
-                    “Awareness is the first step toward meaningful change.”
+                  <p className="text-lg sm:text-xl font-bold leading-snug text-balance max-w-[80%] sm:max-w-[75%]">
+                    "Awareness is the first step toward meaningful change."
                   </p>
                 </div>
               </div>
