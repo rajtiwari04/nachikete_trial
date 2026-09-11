@@ -1,23 +1,47 @@
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Calendar, Users, Heart, Compass, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Heart, Compass, ShieldCheck } from 'lucide-react';
 import { getHomepageCommunityImage } from '@/lib/imageUtils';
 
 export default function HeroSection({ galleryImages = [] }) {
-  // Data-driven image selection (Gallery priority -> Unsplash fallback)
+  // Data-driven image selection (gallery/Cloudinary only — no external fallback)
   const heroImage = getHomepageCommunityImage(galleryImages, 0);
+
+  // Track whether the actual <img> load succeeded, independent of API state.
+  const [imageLoadFailed, setImageLoadFailed] = useState(false);
+  const imgRef = useRef(null);
+
+  // Reset the error state if a new/different image URL comes in
+  // (e.g. gallery data refreshes after initial mount).
+  useEffect(() => {
+    setImageLoadFailed(false);
+  }, [heroImage?.url]);
+
+  // fetchPriority isn't in React 18.3's DOM prop whitelist (support for it
+  // as a JSX prop was added in React 19), so it must be set imperatively on
+  // the DOM node to avoid the "React does not recognize the fetchPriority
+  // prop" warning. This produces the identical browser loading-priority hint.
+  useEffect(() => {
+    if (imgRef.current) {
+      imgRef.current.fetchPriority = 'high';
+    }
+  }, [heroImage?.url, imageLoadFailed]);
+
+  // A "usable" image is one the API gave us AND the browser hasn't failed to load.
+  const canShowImage = Boolean(heroImage?.url) && !imageLoadFailed;
 
   return (
     <section className="relative flex flex-col justify-center bg-background pt-28 sm:pt-32 md:pt-36 pb-16 md:pb-20 overflow-hidden">
       {/* Soft warm ambient radial gradient lighting */}
       <div className="absolute inset-0 pointer-events-none opacity-50 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-amber-50/80 via-indigo-50/40 to-transparent" />
-      
+
       {/* Delicate background mesh pattern */}
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-indigo-100/40 to-lavender-100/30 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
-          
+
           {/* Left Editorial Content */}
           <motion.div
             initial={{ opacity: 0, y: 28 }}
@@ -77,16 +101,34 @@ export default function HeroSection({ galleryImages = [] }) {
             className="lg:col-span-5 relative"
           >
             <div className="relative mx-auto max-w-md lg:max-w-none">
-              
+
               {/* Main Photo Frame */}
               <div className="relative rounded-3xl overflow-hidden border border-border/90 shadow-soft-xl bg-surface group">
-                <img
-                  src={heroImage.url}
-                  alt={heroImage.alt}
-                  className="w-full h-[340px] sm:h-[400px] object-cover object-top group-hover:scale-105 transition-transform duration-700"
-                  loading="eager"
-                />
-                
+                {canShowImage ? (
+                  <img
+                    ref={imgRef}
+                    src={heroImage.url}
+                    alt={heroImage.alt}
+                    className="w-full h-[340px] sm:h-[400px] object-cover object-top group-hover:scale-105 transition-transform duration-700"
+                    loading="eager"
+                    decoding="async"
+                    onError={() => setImageLoadFailed(true)}
+                  />
+                ) : (
+                  // Local neutral placeholder — used both while the API is
+                  // still loading/has no image, and if the Cloudinary image
+                  // itself fails to load. NEVER an external image.
+                  <div
+                    className="w-full h-[340px] sm:h-[400px] bg-gradient-to-br from-indigo-50 via-cream-100 to-indigo-100 animate-pulse flex items-center justify-center"
+                    role="img"
+                    aria-label="Nachiketa Awareness Society"
+                  >
+                    <span className="text-indigo-300 text-sm font-semibold tracking-wide">
+                      Nachiketa Awareness Society
+                    </span>
+                  </div>
+                )}
+
                 {/* Image Gradient Overlay (top-anchored, for quote readability) */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-transparent flex flex-col justify-start p-6 sm:p-8 pt-6 sm:pt-8 pr-16 sm:pr-8 text-white">
                   <span className="text-2xs uppercase tracking-widest text-white/80 font-semibold mb-1">

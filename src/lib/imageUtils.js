@@ -1,92 +1,131 @@
 /**
- * Centralized Image Selection & Optimization Logic for Nachiketa Awareness Society
- * 
- * Priority:
- * 1. Valid real image from Gallery data (if available and non-empty)
- * 2. Curated Unsplash fallback relevant to student awareness, community, wellbeing, and culture
- * 
- * Handles null/undefined, missing URLs, empty arrays, and invalid records safely.
+ * Centralized Image Selection & Validation Logic
+ * for Nachiketa Awareness Society.
+ *
+ * IMPORTANT:
+ * - Uses ONLY real gallery images returned by the API.
+ * - No Unsplash or external fallback images.
+ * - Returns null when no valid image is available.
+ * - Safely handles null, undefined, malformed, and unexpected API data.
  */
-
-// High quality fallback imagery aligned with Nachiketa Awareness Society identity
-export const FALLBACK_COMMUNITY_IMAGES = [
-  {
-    url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Students participating in a Nachiketa Awareness Society community program',
-    title: 'Student Community & Interaction',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Students attending an interactive awareness session organized by Nachiketa',
-    title: 'Awareness Session & Learning',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Students engaging in self-discovery and group discussion',
-    title: 'Group Discussion & Reflection',
-  },
-  {
-    url: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Students participating in a cultural and educational workshop',
-    title: 'Cultural & Wellbeing Program',
-  },
-];
 
 /**
- * Filter out invalid image records and extract valid image URLs
+ * Safely extract an image URL from a gallery item.
+ */
+function getImageUrl(image) {
+  if (typeof image === 'string') {
+    const url = image.trim();
+    return url.length > 0 ? url : null;
+  }
+
+  if (!image || typeof image !== 'object') {
+    return null;
+  }
+
+  const possibleUrl =
+    image.url ||
+    image.imageUrl ||
+    image.thumbnailUrl ||
+    image.image;
+
+  if (typeof possibleUrl !== 'string') {
+    return null;
+  }
+
+  const url = possibleUrl.trim();
+
+  return url.length > 0 ? url : null;
+}
+
+/**
+ * Filter out invalid image records.
+ *
+ * Always returns an array.
  */
 export function getValidGalleryImages(galleryImages) {
-  if (!Array.isArray(galleryImages)) return [];
-  
+  if (!Array.isArray(galleryImages)) {
+    return [];
+  }
+
   return galleryImages.filter((img) => {
-    if (!img) return false;
-    if (typeof img === 'string') return img.trim().length > 0;
-    const url = img.url || img.imageUrl || img.thumbnailUrl || img.image;
-    return typeof url === 'string' && url.trim().length > 0;
+    return Boolean(getImageUrl(img));
   });
 }
 
 /**
- * Get a representative community image for the homepage (Hero, Cards, Open Graph).
- * Automatically prefers valid gallery images when available, falling back to curated Unsplash image.
- * 
- * @param {Array} galleryImages - Raw gallery items array from API or state
- * @param {number} index - Index for deterministic selection when multiple images exist
- * @param {Object} customFallback - Optional custom fallback object
- * @returns {Object} { url, alt, title }
+ * Get a real homepage community image.
+ *
+ * Returns:
+ *   {
+ *     url: string,
+ *     alt: string,
+ *     title: string
+ *   }
+ *
+ * or:
+ *   null
+ *
+ * No fallback image is used.
  */
-export function getHomepageCommunityImage(galleryImages = [], index = 0, customFallback = null) {
+export function getHomepageCommunityImage(
+  galleryImages = [],
+  index = 0
+) {
   const valid = getValidGalleryImages(galleryImages);
-  
-  if (valid.length > 0) {
-    const selected = valid[index % valid.length];
-    
-    if (typeof selected === 'string') {
-      return {
-        url: selected,
-        alt: 'Students participating in a Nachiketa Awareness Society session',
-        title: 'Life at Nachiketa',
-      };
-    }
-    
-    const url = selected.url || selected.imageUrl || selected.thumbnailUrl || selected.image;
-    const rawTitle = selected.title || 'Community Program';
-    const alt = `Students participating in ${rawTitle} - Nachiketa Awareness Society`;
-    
+
+  if (valid.length === 0) {
+    return null;
+  }
+
+  // Keep the index safe even if an unexpected value is passed.
+  const numericIndex = Number.isFinite(Number(index))
+    ? Math.max(0, Math.floor(Number(index)))
+    : 0;
+
+  const selected = valid[numericIndex % valid.length];
+
+  const url = getImageUrl(selected);
+
+  // Extra defensive check.
+  if (!url) {
+    return null;
+  }
+
+  // String-based image record.
+  if (typeof selected === 'string') {
     return {
       url,
-      alt,
-      title: rawTitle,
+      alt: 'Students participating in a Nachiketa Awareness Society session',
+      title: 'Life at Nachiketa',
     };
   }
-  
-  const defaultFallback = FALLBACK_COMMUNITY_IMAGES[index % FALLBACK_COMMUNITY_IMAGES.length];
-  return customFallback || defaultFallback;
+
+  // Object-based image record.
+  const rawTitle =
+    typeof selected.title === 'string' && selected.title.trim()
+      ? selected.title.trim()
+      : 'Community Program';
+
+  const alt =
+    typeof selected.alt === 'string' && selected.alt.trim()
+      ? selected.alt.trim()
+      : `Students participating in ${rawTitle} - Nachiketa Awareness Society`;
+
+  return {
+    url,
+    alt,
+    title: rawTitle,
+  };
 }
 
 /**
- * Conceptually required centralized getHomepageImage function
+ * Backward-compatible alias.
+ *
+ * Existing imports using getHomepageImage will continue to work.
  */
-export function getHomepageImage(galleryImages = [], index = 0) {
+export function getHomepageImage(
+  galleryImages = [],
+  index = 0
+) {
   return getHomepageCommunityImage(galleryImages, index);
 }

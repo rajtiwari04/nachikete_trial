@@ -7,7 +7,7 @@ import ProtectedRoute from '@/components/ui/ProtectedRoute';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 
 // ─── Lazy-loaded public pages ─────────────────────────────────────────────────
-const HomePage        = lazy(() => import('@/pages/HomePage'));
+import HomePage from '@/pages/HomePage';
 const AboutPage       = lazy(() => import('@/pages/AboutPage'));
 const EventsPage      = lazy(() => import('@/pages/EventsPage'));
 const EventDetailPage = lazy(() => import('@/pages/EventDetailPage'));
@@ -42,7 +42,12 @@ const AdminAchievements= lazy(() => import('@/pages/admin/AdminAchievements'));
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
         <Routes>
